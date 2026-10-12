@@ -115,10 +115,10 @@ export const producerBrand: ProducerBrandConfig = {
     ],
   },
   pricing: {
-    nonExclusivePrice: 499,
-    nonExclusiveListPrice: 999,
-    exclusivePrice: 4999,
-    exclusiveListPrice: 11999,
+    nonExclusivePrice: 49,
+    nonExclusiveListPrice: 499,
+    exclusivePrice: 499,
+    exclusiveListPrice: 5999,
   },
   business: {
     currency: "INR",
@@ -196,33 +196,33 @@ export const brandHelpers = {
   getNonExclusivePrice: (config = producerBrand): number => {
     const raw = config.pricing?.nonExclusivePrice;
     if (typeof raw === "number") return raw;
-    const str = getDisplayValue(raw, "499");
+    const str = getDisplayValue(raw, "49");
     const parsed = parseInt(str, 10);
-    return isNaN(parsed) ? 499 : parsed;
+    return isNaN(parsed) ? 49 : parsed;
   },
 
   getNonExclusiveListPrice: (config = producerBrand): number => {
     const raw = config.pricing?.nonExclusiveListPrice;
     if (typeof raw === "number") return raw;
-    const str = getDisplayValue(raw, "999");
+    const str = getDisplayValue(raw, "499");
     const parsed = parseInt(str, 10);
-    return isNaN(parsed) ? 999 : parsed;
+    return isNaN(parsed) ? 499 : parsed;
   },
 
   getExclusivePrice: (config = producerBrand): number => {
     const raw = config.pricing?.exclusivePrice;
     if (typeof raw === "number") return raw;
-    const str = getDisplayValue(raw, "4999");
+    const str = getDisplayValue(raw, "499");
     const parsed = parseInt(str, 10);
-    return isNaN(parsed) ? 4999 : parsed;
+    return isNaN(parsed) ? 499 : parsed;
   },
 
   getExclusiveListPrice: (config = producerBrand): number => {
     const raw = config.pricing?.exclusiveListPrice;
     if (typeof raw === "number") return raw;
-    const str = getDisplayValue(raw, "11999");
+    const str = getDisplayValue(raw, "5999");
     const parsed = parseInt(str, 10);
-    return isNaN(parsed) ? 11999 : parsed;
+    return isNaN(parsed) ? 5999 : parsed;
   },
 
   getPrimaryAccent: (config = producerBrand): string => {

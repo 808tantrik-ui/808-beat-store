@@ -15,6 +15,7 @@
     "preview": "npx vite preview --host --port 4173",
     "vercel-build": "npx prisma generate && npx vite build",
     "tunnel": "npx cloudflared tunnel --url http://localhost:5173",
+    "deploy": "tsx scripts/deploy-git.ts",
     "check-placeholders": "tsx scripts/check-placeholders.ts",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",

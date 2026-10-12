@@ -122,9 +122,15 @@ export function CartPage({ onNavigate }: CartPageProps) {
               <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-surface-border/40">
                 <div className="text-right">
                   <span className="text-[10px] text-text-subtle uppercase block">License Price</span>
-                  <span className="text-lg font-black text-white">
-                    ₹{(item.license?.price || item.price || 0).toLocaleString()}
-                  </span>
+                  <div className="flex items-baseline gap-1.5 justify-end">
+                    <span className="text-xs line-through text-slate-400 font-mono">
+                      ₹{((item.license?.isExclusive || item.license?.name === 'EXCLUSIVE') ? 5999 : 499).toLocaleString()}
+                    </span>
+                    <span className="text-lg font-black text-white">
+                      ₹{(item.license?.price || item.price || 0).toLocaleString()}
+                    </span>
+                  </div>
+                  <span className="text-[9px] text-orange-400 font-bold block mt-0.5">Limited Time 🔥</span>
                 </div>
 
                 <button
@@ -149,12 +155,20 @@ export function CartPage({ onNavigate }: CartPageProps) {
               <span className="text-white font-mono">{items.length}</span>
             </div>
             <div className="flex justify-between">
-              <span>Delivery:</span>
-              <span className="text-electric-cyan font-mono">INSTANT DIGITAL</span>
+              <span>Catalog Value:</span>
+              <span className="text-slate-400 line-through font-mono">
+                ₹{items.reduce((acc, i) => acc + ((i.license?.isExclusive || i.license?.name === 'EXCLUSIVE') ? 5999 : 499), 0).toLocaleString()}
+              </span>
+            </div>
+            <div className="flex justify-between text-emerald-400 font-bold">
+              <span>Promo Savings:</span>
+              <span className="font-mono">
+                -₹{Math.max(0, items.reduce((acc, i) => acc + ((i.license?.isExclusive || i.license?.name === 'EXCLUSIVE') ? 5999 : 499), 0) - getTotal()).toLocaleString()}
+              </span>
             </div>
             <div className="flex justify-between">
-              <span>Commercial Clearance:</span>
-              <span className="text-electric-cyan font-mono">INCLUDED</span>
+              <span>Delivery:</span>
+              <span className="text-electric-cyan font-mono">INSTANT DIGITAL</span>
             </div>
           </div>
 

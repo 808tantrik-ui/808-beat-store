@@ -10,13 +10,17 @@ export async function seed20Beats() {
   // 1. Ensure Standard Licenses exist
   await prisma.license.upsert({
     where: { name: 'NON_EXCLUSIVE' },
-    update: { active: true },
+    update: {
+      active: true,
+      price: 49,
+      defaultPrice: 499,
+    },
     create: {
       name: 'NON_EXCLUSIVE',
       displayName: 'Non-Exclusive License',
       description: 'High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.',
-      price: 1999,
-      defaultPrice: 1999,
+      price: 49,
+      defaultPrice: 499,
       isExclusive: false,
       includedFiles: JSON.stringify(['MP3', 'WAV', 'LICENSE_PDF']),
       commercialUsage: 'Commercial audio release across Spotify, Apple Music & YouTube.',
@@ -28,13 +32,17 @@ export async function seed20Beats() {
 
   await prisma.license.upsert({
     where: { name: 'EXCLUSIVE' },
-    update: { active: true },
+    update: {
+      active: true,
+      price: 499,
+      defaultPrice: 5999,
+    },
     create: {
       name: 'EXCLUSIVE',
       displayName: 'Exclusive License',
       description: 'Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.',
-      price: 19999,
-      defaultPrice: 19999,
+      price: 499,
+      defaultPrice: 5999,
       isExclusive: true,
       includedFiles: JSON.stringify(['MP3', 'WAV', 'LICENSE_PDF', 'LEGAL_CONTRACT']),
       commercialUsage: 'Unlimited commercial streams, global synchronization, radio, cinema, and physical distribution.',

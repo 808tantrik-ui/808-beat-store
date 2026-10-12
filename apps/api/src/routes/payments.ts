@@ -129,15 +129,23 @@ paymentsRouter.post('/checkout', async (req: Request, res: Response) => {
       if (!license) {
         const isEx = item.licenseId.toUpperCase().includes('EXCLUSIVE') && !item.licenseId.toUpperCase().includes('NON');
         const licName = isEx ? 'EXCLUSIVE' : 'NON_EXCLUSIVE';
+        const exPrice = brandHelpers.getExclusivePrice(producerBrand);
+        const nonExPrice = brandHelpers.getNonExclusivePrice(producerBrand);
+        const exListPrice = brandHelpers.getExclusiveListPrice(producerBrand);
+        const nonExListPrice = brandHelpers.getNonExclusiveListPrice(producerBrand);
         license = await prisma.license.upsert({
           where: { name: licName },
-          update: { active: true },
+          update: {
+            active: true,
+            price: isEx ? exPrice : nonExPrice,
+            defaultPrice: isEx ? exListPrice : nonExListPrice,
+          },
           create: {
             name: licName,
             displayName: isEx ? 'Exclusive License' : 'Non-Exclusive License',
             description: isEx ? 'Sole ownership transfer.' : 'Commercial streaming rights.',
-            price: isEx ? 19999 : 1999,
-            defaultPrice: isEx ? 19999 : 1999,
+            price: isEx ? exPrice : nonExPrice,
+            defaultPrice: isEx ? exListPrice : nonExListPrice,
             isExclusive: isEx,
             includedFiles: JSON.stringify(isEx ? ['MP3', 'WAV', 'LICENSE_PDF', 'LEGAL_CONTRACT'] : ['MP3', 'WAV', 'LICENSE_PDF']),
             commercialUsage: 'Commercial streaming across platforms.',

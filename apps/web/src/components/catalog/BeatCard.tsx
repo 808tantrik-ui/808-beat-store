@@ -21,7 +21,7 @@ function BeatCardComponent({ beat, onOpenLicenseModal, onNavigateDetail }: BeatC
 
   const addItem = useCartStore((s) => s.addItem);
 
-  const minPrice = beat.availableLicenses?.[0]?.price || 1999;
+  const minPrice = beat.availableLicenses?.[0]?.price || 49;
 
   const handlePlayToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -105,12 +105,18 @@ function BeatCardComponent({ beat, onOpenLicenseModal, onNavigateDetail }: BeatC
           </p>
         </div>
 
-        <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between gap-2">
+        <div className="pt-3.5 mt-3.5 border-t border-white/10 flex items-center justify-between gap-2">
           <div>
-            <span className="text-[10px] text-text-subtle uppercase block">Starting at</span>
-            <span className="text-base font-black text-white font-mono">
-              ₹{minPrice.toLocaleString()}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] line-through text-slate-400 font-mono">₹499</span>
+              <span className="text-[9px] text-orange-400 font-bold bg-orange-500/10 border border-orange-500/30 px-1.5 py-0.2 rounded-full">
+                🔥 Promo
+              </span>
+            </div>
+            <div className="text-base font-black text-white font-mono flex items-baseline gap-1 mt-0.5">
+              <span className="text-electric-blue">₹{minPrice.toLocaleString()}</span>
+              <span className="text-[10px] text-text-subtle font-sans font-normal">/ lease</span>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">

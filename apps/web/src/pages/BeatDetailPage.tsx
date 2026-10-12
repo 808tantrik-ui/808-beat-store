@@ -352,16 +352,33 @@ export function BeatDetailPage({ slug: propSlug, onNavigate, onOpenLicenseModal 
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-mono text-electric-cyan uppercase">
-                      {isEx ? 'Sole Ownership' : 'Standard License'}
+                    <span className="text-[10px] font-mono text-electric-cyan uppercase font-bold">
+                      {isEx ? '👑 Full Sole Ownership' : 'Standard License'}
                     </span>
-                    {isSelected && (
-                      <span className="w-2 h-2 rounded-full bg-electric-cyan animate-pulse" />
-                    )}
+                    <span className="text-[10px] font-bold text-orange-400 bg-orange-500/10 border border-orange-500/30 px-2 py-0.5 rounded-full">
+                      Limited Time Only 🔥
+                    </span>
                   </div>
+
+                  {isEx && (
+                    <div className="mb-2 py-0.5 px-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-black text-[9px] uppercase tracking-wider rounded-md inline-block">
+                      ★ RECOMMENDED / BEST VALUE
+                    </div>
+                  )}
+
                   <h3 className="font-bold text-white text-lg">{lic.displayName}</h3>
-                  <div className="text-3xl font-black text-white mt-1 mb-2">
-                    {brandHelpers.formatCurrency(lic.price, producerBrand)}
+                  <div className="mt-1 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs line-through text-slate-400 font-mono">
+                        ₹{isEx ? '5,999' : '499'}
+                      </span>
+                      <span className="text-[10px] text-emerald-400 font-mono font-bold">
+                        {isEx ? 'SAVE 92%' : 'SAVE 90%'}
+                      </span>
+                    </div>
+                    <div className="text-3xl font-black text-white">
+                      {brandHelpers.formatCurrency(lic.price, producerBrand)}
+                    </div>
                   </div>
                   <p className="text-xs text-text-muted leading-relaxed">{lic.description}</p>
 

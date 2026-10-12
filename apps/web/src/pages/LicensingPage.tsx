@@ -77,11 +77,17 @@ export function LicensingPage({ licenses, onNavigate }: LicensingPageProps) {
           <tbody className="divide-y divide-surface-border/40 text-xs">
             <tr>
               <td className="py-4 px-6 font-semibold text-white">Starting Price</td>
-              <td className="py-4 px-6 text-center font-bold text-white text-sm">
-                {brandHelpers.formatCurrency(nonExPrice, producerBrand)}
+              <td className="py-4 px-6 text-center">
+                <span className="text-xs line-through text-slate-400 block font-mono">₹499</span>
+                <span className="font-black text-white text-base">₹{nonExPrice}</span>
+                <span className="text-[9px] text-orange-400 font-bold block mt-0.5">Limited Time 🔥</span>
               </td>
-              <td className="py-4 px-6 text-center font-bold text-electric-blue text-sm">
-                {brandHelpers.formatCurrency(exPrice, producerBrand)}
+              <td className="py-4 px-6 text-center bg-amber-500/5">
+                <span className="text-xs line-through text-slate-400 block font-mono">₹5,999</span>
+                <span className="font-black text-amber-400 text-lg">₹{exPrice}</span>
+                <span className="text-[9px] bg-amber-500/20 text-amber-300 font-black px-2 py-0.5 rounded-full inline-block mt-0.5 border border-amber-500/30">
+                  ★ BEST VALUE 🔥
+                </span>
               </td>
             </tr>
             <tr>

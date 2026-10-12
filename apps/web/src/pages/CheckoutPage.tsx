@@ -6,14 +6,16 @@ import {
   AlertCircle, 
   ArrowLeft, 
   Loader2, 
-  UserCheck,
+  Sparkles,
+  Flame,
+  Crown,
+  CreditCard,
   Smartphone,
-  QrCode,
-  Copy,
-  Check,
+  Building2,
+  Wallet,
   CheckCircle2,
-  ExternalLink,
-  Zap
+  FileText,
+  Music
 } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
@@ -49,21 +51,6 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Direct Instant UPI state
-  const upiId = '9754303398@ybl';
-  const upiPayeeName = 'MANOJ KUMAR KAITHAL';
-  const [copiedUpi, setCopiedUpi] = useState(false);
-  const [utrNumber, setUtrNumber] = useState('');
-  const [showUtrField, setShowUtrField] = useState(false);
-  const [isUpiVerifying, setIsUpiVerifying] = useState(false);
-  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedUpi(true);
-    setTimeout(() => setCopiedUpi(false), 2500);
-  };
-
   // If user state updates (e.g. after signing in), sync name & email
   useEffect(() => {
     if (user) {
@@ -82,17 +69,31 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   if (items.length === 0) {
     return (
       <div className="pt-32 pb-24 text-center max-w-md mx-auto px-4">
-        <h2 className="text-xl font-bold text-white mb-2">Cart is empty</h2>
-        <p className="text-xs text-text-muted mb-4">Please add beats to your cart before proceeding to checkout.</p>
+        <div className="w-16 h-16 rounded-2xl bg-surface-light border border-surface-border flex items-center justify-center mx-auto mb-4 text-text-muted">
+          <Music className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-black text-white mb-2">Your Cart is Empty</h2>
+        <p className="text-xs text-text-muted mb-6 leading-relaxed">
+          Select and add any studio master beat with promotional licensing rights before checking out.
+        </p>
         <Link
           to="/beats"
-          className="inline-block px-5 py-2.5 rounded-xl bg-electric-blue text-white text-xs font-bold"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-electric-blue hover:bg-electric-blue/90 text-white text-xs font-bold uppercase tracking-wider shadow-glow-blue transition-all"
         >
-          Browse Beats
+          <span>Explore Beats Catalog</span>
         </Link>
       </div>
     );
   }
+
+  const totalAmount = getTotal();
+
+  // Calculate promotional slashed total
+  const originalTotal = items.reduce((acc, item) => {
+    const isEx = item.license.isExclusive || item.license.name === 'EXCLUSIVE';
+    return acc + (isEx ? 5999 : 499);
+  }, 0);
+  const savingsAmount = Math.max(0, originalTotal - totalAmount);
 
   const handlePayWithRazorpay = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +105,7 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
     }
 
     if (!customerEmail.trim() || !/^\S+@\S+\.\S+$/.test(customerEmail.trim())) {
-      setErrorMessage('Please enter a valid email address for delivery.');
+      setErrorMessage('Please enter a valid email address for instant master audio delivery.');
       return;
     }
 
@@ -143,18 +144,18 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
 
       const { orderId, orderNumber, razorpayOrderId, amount, currency, keyId, isLiveOrder } = checkoutData.data;
 
-      // 2. Dynamically load Razorpay SDK only when checking out
+      // 2. Dynamically load Razorpay SDK
       await loadRazorpay();
 
-      // Open Official Razorpay Checkout if window.Razorpay is loaded and order was created live with Razorpay
       const effectiveKeyId = (import.meta as any).env?.VITE_RAZORPAY_KEY_ID || keyId;
+
       if (typeof window !== 'undefined' && (window as any).Razorpay && isLiveOrder && !effectiveKeyId?.includes('placeholder')) {
         const options = {
           key: effectiveKeyId,
           amount,
-          currency,
+          currency: currency || 'INR',
           name: producerName,
-          description: `Order ${orderNumber} - High Fidelity Instrumentals`,
+          description: `Order ${orderNumber} - High Fidelity Beats`,
           order_id: razorpayOrderId,
           prefill: {
             name: customerName,
@@ -166,7 +167,7 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             backdrop_color: '#050508',
           },
           handler: async (response: any) => {
-            // 3. Cryptographically verify signature on backend (Server Verification)
+            // 3. Cryptographically verify signature on backend
             try {
               const verifyRes = await fetch(apiUrl('/api/payments/razorpay/verify'), {
                 method: 'POST',
@@ -199,7 +200,7 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
           modal: {
             ondismiss: () => {
               setIsProcessing(false);
-              setErrorMessage('Payment was cancelled or closed. Your digital audio files and licenses remain strictly locked.');
+              setErrorMessage('Payment modal was closed. Your digital audio files and licenses remain strictly locked.');
             },
           },
         };
@@ -208,132 +209,48 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
         rzp.on('payment.failed', (response: any) => {
           console.error('[RAZORPAY PAYMENT FAILED]:', response.error);
           setIsProcessing(false);
-          setErrorMessage(response.error?.description || 'Payment was declined or failed. Please check your bank account or retry.');
+          setErrorMessage(response.error?.description || 'Payment was declined or failed. Please check your bank/card or retry.');
         });
         rzp.open();
       } else {
-        // Gateway unavailable - do NOT simulate or bypass payment!
         setIsProcessing(false);
-        setErrorMessage('Online Payment Gateway is temporarily unavailable. Please use the Direct Instant UPI (PhonePe / GPay / Paytm) option above for instant payment.');
+        const reason = !(window as any).Razorpay
+          ? 'Razorpay checkout script load nahi ho saka. Kripya page refresh karein.'
+          : !isLiveOrder
+          ? 'Razorpay gateway temporarily initializing. Please retry in a few seconds.'
+          : 'Payment gateway configuration error. Key ID check karein.';
+        setErrorMessage(reason);
       }
     } catch (err: any) {
       console.error('Checkout error:', err);
       const isFetchError = err?.message && err.message.toLowerCase().includes('fetch');
       setErrorMessage(
         isFetchError
-          ? 'Server se connect ho raha hai. Kripya 2 second ruk kar dobara tap karein.'
-          : (err.message || 'Payment initialize karne me dikkat aayi. Kripya dobara try karein.')
+          ? 'Server connection timeout. Please check your network and retry in 2 seconds.'
+          : (err.message || 'Payment initialization error. Please retry.')
       );
       setIsProcessing(false);
     }
   };
 
-  const ensureOrderCreated = async () => {
-    if (createdOrderId) return createdOrderId;
-    const checkoutRes = await fetch(apiUrl('/api/payments/checkout'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        customerName: customerName.trim(),
-        customerEmail: customerEmail.trim(),
-        items: items.map((i) => ({ beatId: i.beat.id, licenseId: i.license.id })),
-      }),
-    });
-    const checkoutData = await checkoutRes.json();
-    if (!checkoutRes.ok || !checkoutData.success) {
-      throw new Error(checkoutData.error?.message || 'Failed to initiate checkout order.');
-    }
-    setCreatedOrderId(checkoutData.data.orderId);
-    return checkoutData.data.orderId;
-  };
-
-  const handleDirectUpiVerify = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    setErrorMessage(null);
-
-    if (!customerName.trim() || customerName.trim().length < 2) {
-      setErrorMessage('Please enter your artist or company name above.');
-      return;
-    }
-
-    if (!customerEmail.trim() || !/^\S+@\S+\.\S+$/.test(customerEmail.trim())) {
-      setErrorMessage('Please enter a valid email address for delivery.');
-      return;
-    }
-
-    if (!agreedToTerms) {
-      setErrorMessage('You must review and agree to the licensing terms.');
-      return;
-    }
-
-    if (!isAuthenticated && customerEmail.trim()) {
-      setAuth(`guest_${Date.now().toString(36)}`, {
-        id: `usr_${Date.now().toString(36)}`,
-        email: customerEmail.trim(),
-        name: customerName.trim() || customerEmail.split('@')[0],
-        role: 'CUSTOMER',
-      });
-    }
-
-    const cleanUtr = utrNumber.trim();
-    if (!cleanUtr || cleanUtr.length < 8 || !/^[A-Za-z0-9]{8,24}$/.test(cleanUtr)) {
-      setErrorMessage('Kripya UPI payment complete karne ke baad PhonePe, GPay ya Paytm se apna 12-digit UTR / Reference Number enter karein.');
-      return;
-    }
-
-    setIsUpiVerifying(true);
-    try {
-      const orderId = await ensureOrderCreated();
-      const verifyRes = await fetch(apiUrl('/api/payments/upi/verify'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderId,
-          utrNumber: cleanUtr,
-        }),
-      });
-
-      const verifyData = await verifyRes.json();
-      if (verifyData.success) {
-        clearCart();
-        handleNavigate(`/order/success/${orderId}`);
-      } else {
-        setErrorMessage(verifyData.error?.message || 'UPI Payment verification failed. Access denied.');
-        setIsUpiVerifying(false);
-      }
-    } catch (err: any) {
-      console.error('UPI Verify error:', err);
-      const isFetchError = err?.message && err.message.toLowerCase().includes('fetch');
-      setErrorMessage(
-        isFetchError
-          ? 'Server se connect ho raha hai. Kripya 2 second ruk kar dobara tap karein.'
-          : (err.message || 'UPI transaction verify karne me dikkat aayi. Kripya dobara try karein.')
-      );
-      setIsUpiVerifying(false);
-    }
-  };
-
-  const totalAmount = getTotal();
-  const upiDeepLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(upiPayeeName)}&am=${totalAmount.toFixed(2)}&cu=INR&mode=02&purpose=00&tn=${encodeURIComponent('Beat License Purchase')}`;
-  const upiQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=10&data=${encodeURIComponent(upiDeepLink)}`;
-
   const getButtonPaymentText = () => {
     switch (selectedPaymentMethod) {
       case 'upi':
-        return `Pay ₹${totalAmount.toLocaleString()} via Razorpay Gateway`;
+        return `Pay ₹${totalAmount.toLocaleString()} via UPI (PhonePe / GPay)`;
       case 'card':
-        return `Pay ₹${totalAmount.toLocaleString()} via Card`;
+        return `Pay ₹${totalAmount.toLocaleString()} via Card (Debit / Credit)`;
       case 'netbanking':
         return `Pay ₹${totalAmount.toLocaleString()} via Net Banking`;
       case 'wallet':
-        return `Pay ₹${totalAmount.toLocaleString()} via Wallet / EMI`;
+        return `Pay ₹${totalAmount.toLocaleString()} via Wallet`;
       default:
-        return `Pay ₹${totalAmount.toLocaleString()} Securely`;
+        return `Pay ₹${totalAmount.toLocaleString()} with Razorpay`;
     }
   };
 
   return (
-    <div className="pt-28 pb-24 px-4 sm:px-6 max-w-4xl mx-auto">
+    <div className="pt-24 sm:pt-28 pb-20 px-3 sm:px-6 max-w-6xl mx-auto">
+      {/* Return Navigation */}
       <Link
         to="/cart"
         className="inline-flex items-center gap-2 text-xs font-semibold text-text-muted hover:text-white transition-colors mb-6"
@@ -342,41 +259,48 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
         <span>Return to Cart</span>
       </Link>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Customer Information & Payment Action */}
-        <div className="lg:col-span-7 bg-surface p-6 sm:p-8 rounded-2xl border border-surface-border shadow-xl space-y-6">
-          <div>
-            <h1 className="text-2xl font-black text-white tracking-tight">Checkout & Delivery</h1>
-            <p className="text-xs text-text-muted mt-1">
-              Your high-fidelity masters and legal license will be delivered to this email.
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        {/* Left Column: Form & Payment Gateway Trigger */}
+        <div className="lg:col-span-7 bg-[#0d0e17] p-5 sm:p-8 rounded-2xl border border-surface-border shadow-2xl space-y-6">
+          <div className="border-b border-surface-border pb-4">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-bold flex items-center gap-1">
+                <Lock className="w-3 h-3" />
+                <span>256-Bit SSL Encrypted</span>
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Checkout & Delivery</h1>
+            <p className="text-xs text-text-muted mt-1 leading-relaxed">
+              Enter your artist name and delivery email to receive cryptographically signed master WAVs, MP3s, and legal contracts.
             </p>
           </div>
 
           {errorMessage && (
-            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-2.5 text-xs text-rose-300">
+            <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-3 text-xs text-rose-300 animate-in fade-in">
               <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
               <span>{errorMessage}</span>
             </div>
           )}
 
-          <form onSubmit={handlePayWithRazorpay} className="space-y-5">
+          <form onSubmit={handlePayWithRazorpay} className="space-y-6">
+            {/* Customer Inputs */}
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
-                  Artist / Legal Entity Name *
+                <label className="block text-xs font-bold text-white mb-1.5 uppercase tracking-wider">
+                  Artist / Company / Stage Name *
                 </label>
                 <input
                   type="text"
                   required
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="e.g. Kendrick / Aftermath Ent."
-                  className="w-full bg-surface-light border border-surface-border rounded-xl px-4 py-3 text-sm text-white placeholder-text-subtle focus:outline-none focus:border-electric-blue focus:ring-1 focus:ring-electric-blue"
+                  placeholder="e.g. Kendrick / OVO Sound / Artist Name"
+                  className="w-full bg-[#141522] border border-surface-border rounded-xl px-4 py-3.5 text-sm text-white placeholder-text-subtle focus:outline-none focus:border-electric-blue focus:ring-1 focus:ring-electric-blue transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-white mb-1.5 uppercase tracking-wider">
                   Delivery Email Address *
                 </label>
                 <input
@@ -384,162 +308,30 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                   required
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  placeholder="artist@musiclabel.com"
-                  className="w-full bg-surface-light border border-surface-border rounded-xl px-4 py-3 text-sm text-white placeholder-text-subtle focus:outline-none focus:border-electric-blue focus:ring-1 focus:ring-electric-blue"
+                  placeholder="artist@recordlabel.com"
+                  className="w-full bg-[#141522] border border-surface-border rounded-xl px-4 py-3.5 text-sm text-white placeholder-text-subtle focus:outline-none focus:border-electric-blue focus:ring-1 focus:ring-electric-blue transition-all"
                 />
-                <span className="text-[10px] text-text-subtle mt-1 block">
-                  Download links and signed license PDF will be sent here immediately.
+                <span className="text-[11px] text-text-subtle mt-1.5 block">
+                  🔒 Studio WAV master files & legally binding PDF license will be delivered to this email instantly.
                 </span>
               </div>
             </div>
 
-            {/* Payment Method Selector (UPI, Card, Net Banking, Wallet) */}
-            <PaymentMethodSelector
-              selectedMethod={selectedPaymentMethod}
-              onSelectMethod={(method) => setSelectedPaymentMethod(method)}
-            />
-
-            {/* Direct Instant UPI (PhonePe, GPay, Paytm) Hub */}
-            {selectedPaymentMethod === 'upi' && (
-              <div className="p-5 rounded-2xl bg-gradient-to-b from-surface-light via-surface to-surface border border-emerald-500/30 shadow-2xl space-y-4 animate-in fade-in-50 duration-300">
-                <div className="flex items-center justify-between pb-3 border-b border-surface-border">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black text-xs border border-emerald-500/30 shadow-glow-emerald">
-                      UPI
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                        <span>Direct Instant UPI</span>
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">
-                          0% Gateway Fee
-                        </span>
-                      </h3>
-                      <p className="text-[11px] text-text-muted">Exact amount pre-filled automatically</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[10px] font-mono uppercase text-text-subtle">Payable</span>
-                    <div className="text-xl font-black text-emerald-400 font-mono">
-                      ₹{totalAmount.toLocaleString()}
-                    </div>
-                  </div>
-                </div>
-
-                {/* 1-Tap Mobile Link (Opens PhonePe / GPay / Paytm directly) */}
-                <a
-                  href={upiDeepLink}
-                  className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all text-center group"
-                >
-                  <Smartphone className="w-4 h-4 transition-transform group-hover:scale-110" />
-                  <span>Open in UPI App (PhonePe / GPay / Paytm)</span>
-                  <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-                </a>
-
-                {/* Dynamic QR Code & UPI ID Copy for Desktop / Scanner */}
-                <div className="p-4 rounded-xl bg-surface/90 border border-surface-border flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-                  <div className="p-2.5 rounded-2xl bg-white shadow-xl shrink-0 border border-emerald-500/20">
-                    <img
-                      src={upiQrUrl}
-                      alt={`Scan to pay ₹${totalAmount}`}
-                      className="w-32 h-32 object-contain rounded-lg"
-                      loading="eager"
-                    />
-                  </div>
-
-                  <div className="space-y-2 text-xs flex-1">
-                    <div>
-                      <span className="text-text-subtle text-[11px] font-semibold">Official Payee UPI ID:</span>
-                      <div className="flex items-center gap-2 mt-1">
-                        <code className="text-emerald-400 font-mono font-black text-xs sm:text-sm bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 select-all">
-                          {upiId}
-                        </code>
-                        <button
-                          type="button"
-                          onClick={() => copyToClipboard(upiId)}
-                          className="px-3 py-1.5 rounded-lg bg-surface-light hover:bg-surface-lighter border border-surface-border text-text-muted hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-                        >
-                          {copiedUpi ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                          <span>{copiedUpi ? 'Copied!' : 'Copy'}</span>
-                        </button>
-                      </div>
-                    </div>
-                    <p className="text-[11px] text-text-muted leading-relaxed">
-                      QR code scan karte hi phone mein exact <strong className="text-emerald-400 font-mono">₹{totalAmount.toLocaleString()}</strong> likha aayega.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Locked Amount Badge */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-surface/70 border border-emerald-500/20 text-xs">
-                  <div className="flex items-center gap-2 text-emerald-400 font-semibold">
-                    <Lock className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Amount Locked: <strong className="text-white font-mono">₹{totalAmount.toLocaleString()}</strong></span>
-                  </div>
-                  <span className="text-[10px] text-text-muted bg-surface px-2 py-0.5 rounded-full border border-surface-border">
-                    🔒 Non-Editable Fixed Bill
-                  </span>
-                </div>
-
-                {/* Step 2: Enter Transaction UTR / Ref Number */}
-                <div className="p-4 rounded-xl bg-surface/90 border border-emerald-500/20 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <label className="block text-xs font-bold text-white uppercase tracking-wider">
-                      Step 2: Enter 12-Digit UPI Reference (UTR) *
-                    </label>
-                    <span className="text-[10px] text-emerald-400 font-mono font-bold">Required for Verification</span>
-                  </div>
-                  <input
-                    type="text"
-                    value={utrNumber}
-                    onChange={(e) => setUtrNumber(e.target.value.replace(/[^0-9A-Za-z]/g, '').slice(0, 24))}
-                    placeholder="e.g. 428910283921 (12 digits from PhonePe/GPay/Paytm)"
-                    className="w-full bg-surface-light border border-surface-border rounded-xl px-4 py-3 text-sm text-white font-mono placeholder-text-subtle focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
-                  />
-                  <p className="text-[11px] text-text-muted leading-relaxed">
-                    UPI App (PhonePe / GPay / Paytm) mein payment complete hone ke baad transaction receipt par likha <strong className="text-emerald-400">12-Digit UTR Number</strong> yahan enter karein.
-                  </p>
-                </div>
-
-                {/* Secure Verification Submission Button */}
-                <div className="pt-1 space-y-2.5">
-                  {errorMessage && (
-                    <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 flex items-start gap-2 text-xs text-rose-300 animate-in fade-in">
-                      <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                      <span>{errorMessage}</span>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={handleDirectUpiVerify}
-                    disabled={isUpiVerifying || !utrNumber.trim()}
-                    className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-40 text-white text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-glow-emerald shadow-lg transition-all"
-                  >
-                    {isUpiVerifying ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Submitting & Verifying Transaction...</span>
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle2 className="w-5 h-5" />
-                        <span>Verify UPI Payment & Submit Order</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                <div className="relative py-2 flex items-center justify-center">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-surface-border"></div>
-                  </div>
-                  <span className="relative bg-surface px-3 text-[10px] font-mono uppercase text-text-subtle">
-                    Or pay via Razorpay Gateway below
-                  </span>
-                </div>
-              </div>
-            )}
-
+            {/* Payment Method Selector */}
             <div className="pt-2">
+              <label className="block text-xs font-bold text-white mb-2 uppercase tracking-wider flex items-center justify-between">
+                <span>Select Payment Method</span>
+                <span className="text-[10px] text-electric-cyan font-mono font-normal">Razorpay Verified</span>
+              </label>
+
+              <PaymentMethodSelector
+                selectedMethod={selectedPaymentMethod}
+                onSelectMethod={(method) => setSelectedPaymentMethod(method)}
+              />
+            </div>
+
+            {/* Terms Agreement */}
+            <div className="p-3.5 rounded-xl bg-surface-light/40 border border-surface-border">
               <label className="flex items-start gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
@@ -554,31 +346,26 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                       e.stopPropagation();
                       handleNavigate('/licensing-terms');
                     }}
-                    className="text-electric-cyan underline hover:text-white cursor-pointer"
+                    className="text-electric-cyan underline hover:text-white cursor-pointer font-semibold"
                   >
                     Licensing Terms & Conditions
                   </span>{' '}
-                  and acknowledge that digital downloads are delivered immediately upon verified payment.
+                  and acknowledge that digital audio downloads are delivered immediately upon payment.
                 </span>
               </label>
             </div>
 
-            <div className="pt-2 space-y-2">
-              {errorMessage && (
-                <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 flex items-start gap-2 text-xs text-rose-300 animate-in fade-in">
-                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
+            {/* Pay Button */}
+            <div className="pt-2">
               <button
                 type="submit"
                 disabled={isProcessing}
-                className="w-full py-4 rounded-xl bg-electric-blue hover:bg-electric-blue/90 disabled:opacity-50 text-white font-extrabold text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-glow-blue transition-all"
+                className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-glow-blue shadow-lg transition-all active:scale-[0.99] cursor-pointer border-0"
               >
                 {isProcessing ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Verifying Secure Transaction...</span>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Opening Razorpay Secure Gateway...</span>
                   </>
                 ) : (
                   <>
@@ -590,64 +377,131 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             </div>
           </form>
 
-          <div className="pt-3 border-t border-surface-border flex items-center justify-center gap-3 text-xs text-text-subtle flex-wrap">
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-electric-cyan" />
-              <span>Razorpay Verified</span>
+          {/* Trust Badges */}
+          <div className="pt-4 border-t border-surface-border flex items-center justify-center gap-4 text-xs text-text-subtle flex-wrap">
+            <span className="flex items-center gap-1.5 text-slate-300">
+              <ShieldCheck className="w-4 h-4 text-electric-cyan" />
+              <span>Official Razorpay Gateway</span>
             </span>
             <span>•</span>
-            <span>256-Bit SSL</span>
+            <span className="flex items-center gap-1 text-slate-300">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Instant Download Vault</span>
+            </span>
             <span>•</span>
-            <span>UPI / Card / NetBanking</span>
+            <span className="text-slate-300">UPI / Card / NetBanking / EMI</span>
           </div>
         </div>
 
-        {/* Order Items Review */}
-        <div className="lg:col-span-5 bg-surface/60 p-6 rounded-2xl border border-surface-border space-y-4">
-          <h2 className="text-sm font-bold text-white uppercase tracking-wider pb-3 border-b border-surface-border">
-            Review Order ({items.length} Beats)
-          </h2>
+        {/* Right Column: Order Summary with Promotional Discounts */}
+        <div className="lg:col-span-5 space-y-4">
+          <div className="bg-[#0d0e17] p-5 sm:p-6 rounded-2xl border border-surface-border shadow-xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-surface-border">
+              <h2 className="text-sm font-black text-white uppercase tracking-wider">
+                Order Summary ({items.length} {items.length === 1 ? 'Beat' : 'Beats'})
+              </h2>
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 bg-orange-500/15 border border-orange-500/30 px-2 py-0.5 rounded-full">
+                <Flame className="w-3 h-3 fill-orange-400" />
+                <span>Limited Time Offer</span>
+              </span>
+            </div>
 
-          <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
-            {items.map((item) => (
-              <div key={item.beat.id} className="flex items-center justify-between gap-3 text-xs">
-                <div className="flex items-center gap-2.5 truncate">
-                  <img
-                    src={item.beat.artwork}
-                    alt={item.beat.title}
-                    width={40}
-                    height={40}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-10 h-10 rounded-lg object-cover border border-surface-border shrink-0"
-                  />
-                  <div className="truncate">
-                    <div className="font-bold text-white truncate">{item.beat.title}</div>
-                    <div className="text-[11px] text-electric-cyan font-mono">{item.license.displayName}</div>
+            {/* Beat Items List */}
+            <div className="space-y-3.5 max-h-[340px] overflow-y-auto pr-1">
+              {items.map((item) => {
+                const isEx = item.license.isExclusive || item.license.name === 'EXCLUSIVE';
+                const originalPrice = isEx ? 5999 : 499;
+
+                return (
+                  <div key={item.beat.id} className="p-3 rounded-xl bg-surface-light/30 border border-surface-border/60 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 truncate">
+                      <img
+                        src={item.beat.artwork}
+                        alt={item.beat.title}
+                        width={48}
+                        height={48}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-12 h-12 rounded-lg object-cover border border-surface-border shrink-0"
+                      />
+                      <div className="truncate">
+                        <div className="font-extrabold text-white text-sm truncate">{item.beat.title}</div>
+                        <div className="text-[11px] text-electric-cyan font-mono flex items-center gap-1 mt-0.5">
+                          {isEx ? (
+                            <span className="text-amber-400 font-bold flex items-center gap-1">
+                              <Crown className="w-3 h-3 fill-amber-400" />
+                              Exclusive License
+                            </span>
+                          ) : (
+                            <span>Non-Exclusive License</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <span className="text-[11px] line-through text-slate-400 font-mono block">
+                        ₹{originalPrice.toLocaleString()}
+                      </span>
+                      <span className={`text-base font-black ${isEx ? 'text-amber-400' : 'text-white'}`}>
+                        ₹{item.price.toLocaleString()}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                );
+              })}
+            </div>
 
-                <div className="font-bold text-white shrink-0">
-                  ₹{item.price.toLocaleString()}
-                </div>
+            {/* Calculations Breakdown */}
+            <div className="pt-4 border-t border-surface-border space-y-2.5 text-xs text-text-muted">
+              <div className="flex justify-between">
+                <span>Standard Catalog Price:</span>
+                <span className="text-slate-400 line-through font-mono">₹{originalTotal.toLocaleString()}</span>
               </div>
-            ))}
+              <div className="flex justify-between text-emerald-400 font-semibold">
+                <span>Promotional Discount:</span>
+                <span className="font-mono">-₹{savingsAmount.toLocaleString()} (90%+ OFF)</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Digital Delivery & License:</span>
+                <span className="text-electric-cyan font-mono font-bold">FREE / INSTANT</span>
+              </div>
+            </div>
+
+            {/* Total Payable Box */}
+            <div className="pt-4 border-t border-surface-border flex justify-between items-baseline bg-surface-light/40 -mx-5 sm:-mx-6 -mb-5 sm:-mb-6 p-5 sm:p-6 rounded-b-2xl">
+              <div>
+                <span className="text-xs uppercase font-bold text-text-muted block">Final Total Payable</span>
+                <span className="text-[10px] text-emerald-400 font-mono font-bold">Save ₹{savingsAmount.toLocaleString()} Today</span>
+              </div>
+              <span className="text-3xl font-black text-white font-mono">
+                ₹{totalAmount.toLocaleString()}
+              </span>
+            </div>
           </div>
 
-          <div className="pt-4 border-t border-surface-border space-y-2 text-xs text-text-muted">
-            <div className="flex justify-between">
-              <span>Subtotal:</span>
-              <span className="text-white font-mono">₹{getTotal().toLocaleString()}</span>
+          {/* Upsell Banner if only Non-Exclusive in cart */}
+          {items.some((i) => !i.license.isExclusive && i.license.name !== 'EXCLUSIVE') && (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 text-xs space-y-1.5">
+              <div className="flex items-center gap-1.5 text-amber-300 font-black uppercase text-[11px]">
+                <Crown className="w-3.5 h-3.5 fill-amber-300" />
+                <span>UPSELL: Claim Full Exclusive Rights for ₹499</span>
+              </div>
+              <p className="text-text-muted leading-relaxed text-[11px]">
+                Want 100% sole ownership so NO other artist can ever release with this beat? Upgrade to Exclusive in cart for only ₹499 (slashed from ₹5,999)!
+              </p>
             </div>
-            <div className="flex justify-between">
-              <span>Digital Delivery:</span>
-              <span className="text-electric-cyan font-mono">FREE / INSTANT</span>
-            </div>
-          </div>
+          )}
 
-          <div className="pt-3 border-t border-surface-border flex justify-between items-center">
-            <span className="text-sm font-bold text-white">Total:</span>
-            <span className="text-2xl font-black text-white">₹{getTotal().toLocaleString()}</span>
+          {/* Instant Guarantee */}
+          <div className="p-4 rounded-xl bg-surface-light/30 border border-surface-border text-center space-y-1">
+            <span className="text-xs font-bold text-white flex items-center justify-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span>100% Commercial Streaming Clearance</span>
+            </span>
+            <p className="text-[11px] text-text-muted">
+              WAV and MP3 download links remain active in your secure vault with an official signed legal certificate.
+            </p>
           </div>
         </div>
       </div>
