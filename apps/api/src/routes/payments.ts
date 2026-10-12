@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import { prisma } from '../lib/prisma.js';
 import { createRazorpayOrder, verifyRazorpaySignature } from '../lib/razorpay.js';
 import { checkoutSchema, razorpayVerifySchema } from '../../../../packages/shared/src/schemas.js';
@@ -38,18 +40,76 @@ paymentsRouter.post('/checkout', async (req: Request, res: Response) => {
       price: number;
     }[] = [];
 
+    // Catalog fallback cache
+    let scheduledCatalog: any[] = [];
+    try {
+      const catalogPath = path.resolve(process.cwd(), 'data/scheduled-beats.json');
+      if (fs.existsSync(catalogPath)) {
+        scheduledCatalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+      }
+    } catch {}
+
     for (const item of items) {
+      const cleanSlug = item.beatId
+        .replace(/^beat-808-sched-\d+-/, '')
+        .replace(/-beat$/, '')
+        .toLowerCase();
+
       let beat = await prisma.beat.findUnique({ where: { id: item.beatId } }).catch(() => null);
       if (!beat) {
         beat = await prisma.beat.findFirst({
           where: {
             OR: [
+              { id: item.beatId },
               { slug: item.beatId },
-              { slug: item.beatId.replace(/-beat$/, '') },
+              { slug: cleanSlug },
               { title: item.beatId },
+              { title: cleanSlug.replace(/-/g, ' ') },
             ],
           },
         });
+      }
+
+      // Auto-bootstrap beat from catalog if first run on new database instance
+      if (!beat) {
+        const catalogMatch = scheduledCatalog.find(
+          (b) =>
+            b.id === item.beatId ||
+            b.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === cleanSlug ||
+            b.title.toLowerCase() === cleanSlug.replace(/-/g, ' ')
+        );
+
+        if (catalogMatch) {
+          const finalSlug = catalogMatch.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+          beat = await prisma.beat.upsert({
+            where: { slug: finalSlug },
+            update: { status: 'PUBLISHED' },
+            create: {
+              id: item.beatId,
+              title: catalogMatch.title,
+              slug: finalSlug,
+              description: catalogMatch.youtubeDescription || `Studio master ${catalogMatch.genre} beat.`,
+              artwork: `/assets/artwork/${finalSlug}.jpg`,
+              previewAudio: `/assets/audio/${finalSlug}.wav`,
+              privateMp3: `/assets/audio/${finalSlug}.mp3`,
+              privateWav: `/assets/audio/${finalSlug}.wav`,
+              bpm: catalogMatch.bpm || 100,
+              key: catalogMatch.key || 'C Minor',
+              duration: 165,
+              mood: catalogMatch.mood || 'High Energy',
+              style: catalogMatch.style || catalogMatch.genre,
+              genre: catalogMatch.genre || 'Hip-Hop',
+              producerName: '808 Tantrik',
+              producerDisplayName: '808 Beat Store',
+              copyrightOwner: 'MANOJ KUMAR KAITHAL',
+              publisher: '808 Beat Store',
+              status: 'PUBLISHED',
+              featured: true,
+              playsCount: 250,
+              salesCount: 0,
+            },
+          });
+        }
       }
 
       let license = await prisma.license.findUnique({ where: { id: item.licenseId } }).catch(() => null);
@@ -57,9 +117,31 @@ paymentsRouter.post('/checkout', async (req: Request, res: Response) => {
         license = await prisma.license.findFirst({
           where: {
             OR: [
+              { id: item.licenseId },
               { name: item.licenseId },
               { displayName: item.licenseId },
+              { name: item.licenseId.toUpperCase() },
             ],
+          },
+        });
+      }
+
+      if (!license) {
+        const isEx = item.licenseId.toUpperCase().includes('EXCLUSIVE') && !item.licenseId.toUpperCase().includes('NON');
+        const licName = isEx ? 'EXCLUSIVE' : 'NON_EXCLUSIVE';
+        license = await prisma.license.upsert({
+          where: { name: licName },
+          update: { active: true },
+          create: {
+            name: licName,
+            displayName: isEx ? 'Exclusive License' : 'Non-Exclusive License',
+            description: isEx ? 'Sole ownership transfer.' : 'Commercial streaming rights.',
+            price: isEx ? 19999 : 1999,
+            defaultPrice: isEx ? 19999 : 1999,
+            isExclusive: isEx,
+            includedFiles: JSON.stringify(isEx ? ['MP3', 'WAV', 'LICENSE_PDF', 'LEGAL_CONTRACT'] : ['MP3', 'WAV', 'LICENSE_PDF']),
+            commercialUsage: 'Commercial streaming across platforms.',
+            active: true,
           },
         });
       }

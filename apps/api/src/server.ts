@@ -142,8 +142,18 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 // In serverless environments (e.g. Vercel), the runtime invokes the exported app handler directly.
 // Only bind to local port when running as a standalone server.
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
     console.log(`🚀 Beat Store API running at http://localhost:${PORT}`);
+    try {
+      const { seed20Beats } = await import('../../../scripts/seed-20-beats.js').catch(() =>
+        import('../../../scripts/seed-20-beats.ts' as any)
+      );
+      if (seed20Beats) {
+        await seed20Beats();
+      }
+    } catch (err: any) {
+      console.warn('[SEED WARNING]:', err.message);
+    }
   });
 }
 
