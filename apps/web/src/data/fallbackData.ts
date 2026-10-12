@@ -32,7 +32,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -48,7 +49,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -94,7 +96,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -110,7 +113,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -156,7 +160,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -172,7 +177,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -218,7 +224,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -234,7 +241,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -280,7 +288,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -296,7 +305,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -342,7 +352,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -358,7 +369,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -404,7 +416,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -420,7 +433,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -466,7 +480,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -482,7 +497,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -528,7 +544,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -544,7 +561,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -590,7 +608,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -606,7 +625,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -652,7 +672,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -668,7 +689,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -714,7 +736,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -730,7 +753,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -776,7 +800,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -792,7 +817,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -838,7 +864,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -854,7 +881,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -900,7 +928,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -916,7 +945,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -962,7 +992,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -978,7 +1009,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -1024,7 +1056,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -1040,7 +1073,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -1086,7 +1120,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -1102,7 +1137,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -1148,7 +1184,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -1164,7 +1201,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -1210,7 +1248,8 @@ export const FALLBACK_BEATS = [
         "name": "NON_EXCLUSIVE",
         "displayName": "Non-Exclusive License",
         "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-        "price": 1999,
+        "price": 49,
+        "defaultPrice": 499,
         "isExclusive": false,
         "includedFiles": [
           "MP3",
@@ -1226,7 +1265,8 @@ export const FALLBACK_BEATS = [
         "name": "EXCLUSIVE",
         "displayName": "Exclusive License",
         "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-        "price": 19999,
+        "price": 499,
+        "defaultPrice": 5999,
         "isExclusive": true,
         "includedFiles": [
           "MP3",
@@ -1248,8 +1288,8 @@ export const FALLBACK_LICENSES = [
     "name": "NON_EXCLUSIVE",
     "displayName": "Non-Exclusive License",
     "description": "High-quality commercial master files (MP3 + 24-Bit WAV) for streaming, singles, and music videos.",
-    "price": 499,
-    "defaultPrice": 999,
+    "price": 49,
+    "defaultPrice": 499,
     "isExclusive": false,
     "includedFiles": [
       "MP3",
@@ -1287,8 +1327,8 @@ export const FALLBACK_LICENSES = [
     "name": "EXCLUSIVE",
     "displayName": "Exclusive License",
     "description": "Sole ownership transfer. The beat is automatically permanently archived from the store and cannot be bought again.",
-    "price": 4999,
-    "defaultPrice": 11999,
+    "price": 499,
+    "defaultPrice": 5999,
     "isExclusive": true,
     "includedFiles": [
       "MP3",

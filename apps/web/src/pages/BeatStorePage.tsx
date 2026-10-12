@@ -543,7 +543,8 @@ export function BeatStorePage({ beats, onNavigate, onOpenLicenseModal }: BeatSto
               <tbody className="divide-y divide-surface-border/40 text-sm">
                 {filteredBeats.map((beat) => {
                   const isThisPlaying = currentTrack?.id === beat.id && isPlaying;
-                  const startingPrice = beat.availableLicenses?.[0]?.price || 1999;
+                  const startingPrice = beat.availableLicenses?.[0]?.price || 49;
+                  const cutPrice = beat.availableLicenses?.[0]?.defaultPrice || 499;
 
                   return (
                     <tr
@@ -614,8 +615,14 @@ export function BeatStorePage({ beats, onNavigate, onOpenLicenseModal }: BeatSto
                       </td>
 
                       {/* Price */}
-                      <td className="py-3 px-4 font-bold text-white text-base">
-                        ₹{startingPrice.toLocaleString()}
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[11px] line-through text-slate-400 font-mono">₹{cutPrice}</span>
+                          <span className="text-[9px] text-orange-400 font-bold bg-orange-500/10 border border-orange-500/30 px-1 py-0.2 rounded-full">🔥 Promo</span>
+                        </div>
+                        <div className="font-black text-white text-base">
+                          ₹{startingPrice.toLocaleString()}
+                        </div>
                       </td>
 
                       {/* Action buttons */}
@@ -658,7 +665,8 @@ export function BeatStorePage({ beats, onNavigate, onOpenLicenseModal }: BeatSto
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredBeats.map((beat) => {
             const isThisPlaying = currentTrack?.id === beat.id && isPlaying;
-            const startingPrice = beat.availableLicenses?.[0]?.price || 1999;
+            const startingPrice = beat.availableLicenses?.[0]?.price || 49;
+            const cutPrice = beat.availableLicenses?.[0]?.defaultPrice || 499;
 
             return (
               <div
@@ -720,9 +728,13 @@ export function BeatStorePage({ beats, onNavigate, onOpenLicenseModal }: BeatSto
 
                 <div className="pt-3.5 sm:pt-4 mt-3.5 sm:mt-4 border-t border-surface-border/70 flex items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <span className="text-[10px] text-text-subtle uppercase block">Starting at</span>
-                    <div className="text-sm sm:text-base font-black text-white">
-                      ₹{startingPrice.toLocaleString()}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] line-through text-slate-400 font-mono">₹{cutPrice}</span>
+                      <span className="text-[9px] text-orange-400 font-bold bg-orange-500/10 border border-orange-500/30 px-1 py-0.2 rounded-full">🔥 Promo</span>
+                    </div>
+                    <div className="text-base font-black text-white flex items-baseline gap-1 mt-0.5">
+                      <span className="text-electric-blue">₹{startingPrice.toLocaleString()}</span>
+                      <span className="text-[10px] text-text-subtle font-sans font-normal">/ lease</span>
                     </div>
                   </div>
 

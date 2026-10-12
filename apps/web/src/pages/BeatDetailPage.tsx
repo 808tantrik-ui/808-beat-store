@@ -156,8 +156,48 @@ export function BeatDetailPage({ slug: propSlug, onNavigate, onOpenLicenseModal 
     );
   }
 
-  const isCurrentPlaying = currentTrack?.id === beat.id && isPlaying;
-  const activeLicense = beat.availableLicenses?.find((l) => l.id === selectedLicenseId) || beat.availableLicenses?.[0];
+  const exPrice = brandHelpers.getExclusivePrice(producerBrand); // 499
+  const exListPrice = brandHelpers.getExclusiveListPrice(producerBrand); // 5999
+  const nonExPrice = brandHelpers.getNonExclusivePrice(producerBrand); // 49
+  const nonExListPrice = brandHelpers.getNonExclusiveListPrice(producerBrand); // 499
+
+  const rawLicenses = beat.availableLicenses && beat.availableLicenses.length > 0
+    ? beat.availableLicenses
+    : [
+        {
+          id: 'non-exclusive-def',
+          name: 'NON_EXCLUSIVE',
+          displayName: 'Non-Exclusive License',
+          price: nonExPrice,
+          defaultPrice: nonExListPrice,
+          description: 'Commercial release rights for streaming platforms and music videos.',
+          includedFiles: ['MP3', 'WAV', 'LICENSE_PDF'],
+          commercialUsage: 'Up to 500,000 streams on Spotify/Apple Music',
+          isExclusive: false,
+        },
+        {
+          id: 'exclusive-def',
+          name: 'EXCLUSIVE',
+          displayName: 'Exclusive License',
+          price: exPrice,
+          defaultPrice: exListPrice,
+          description: 'Sole ownership transfer. Beat is permanently archived upon purchase.',
+          includedFiles: ['MP3', 'WAV', 'LICENSE_PDF', 'LEGAL_CONTRACT'],
+          commercialUsage: 'Unlimited commercial streams, sync & broadcast',
+          isExclusive: true,
+        },
+      ];
+
+  const normalizedLicenses = rawLicenses.map((lic) => {
+    const isEx = !!lic.isExclusive || lic.name === 'EXCLUSIVE';
+    return {
+      ...lic,
+      price: isEx ? exPrice : nonExPrice,
+      defaultPrice: isEx ? exListPrice : nonExListPrice,
+    };
+  });
+
+  const activeLicense = normalizedLicenses.find((l) => l.id === selectedLicenseId) || normalizedLicenses[0];
 
   const handlePlayToggle = () => {
     if (isCurrentPlaying) {
@@ -169,7 +209,13 @@ export function BeatDetailPage({ slug: propSlug, onNavigate, onOpenLicenseModal 
 
   const handleAddToCart = (redirect = false) => {
     if (activeLicense) {
-      addItem(beat, activeLicense);
+      const isEx = !!activeLicense.isExclusive || activeLicense.name === 'EXCLUSIVE';
+      const safeLicense = {
+        ...activeLicense,
+        price: isEx ? exPrice : nonExPrice,
+        defaultPrice: isEx ? exListPrice : nonExListPrice,
+      };
+      addItem(beat, safeLicense);
       if (redirect) {
         handleNavigate('/checkout');
       }
@@ -311,28 +357,7 @@ export function BeatDetailPage({ slug: propSlug, onNavigate, onOpenLicenseModal 
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 max-w-3xl gap-6 mb-8">
-          {(beat.availableLicenses || [
-            {
-              id: 'non-exclusive-def',
-              name: 'NON_EXCLUSIVE',
-              displayName: 'Non-Exclusive License',
-              price: brandHelpers.getNonExclusivePrice(producerBrand),
-              description: 'Commercial release rights for streaming platforms and music videos.',
-              includedFiles: ['MP3', 'WAV', 'LICENSE_PDF'],
-              commercialUsage: 'Up to 500,000 streams on Spotify/Apple Music',
-              isExclusive: false,
-            },
-            {
-              id: 'exclusive-def',
-              name: 'EXCLUSIVE',
-              displayName: 'Exclusive License',
-              price: brandHelpers.getExclusivePrice(producerBrand),
-              description: 'Sole ownership transfer. Beat is permanently archived upon purchase.',
-              includedFiles: ['MP3', 'WAV', 'LICENSE_PDF', 'LEGAL_CONTRACT'],
-              commercialUsage: 'Unlimited commercial streams, sync & broadcast',
-              isExclusive: true,
-            },
-          ] as any[]).map((lic) => {
+          {normalizedLicenses.map((lic) => {
             const isSelected = lic.id === activeLicense?.id;
             const isEx = !!lic.isExclusive || lic.name === 'EXCLUSIVE';
             const includedFilesList = Array.isArray(lic.includedFiles)

@@ -30,7 +30,8 @@ function CompactCatalogComponent({
       {displayBeats.map((beat, index) => {
         const isCurrentActive = currentTrackId === beat.id;
         const isCurrentlyPlaying = isCurrentActive && isPlaying;
-        const minPrice = beat.availableLicenses?.[0]?.price || 1999;
+        const minPrice = beat.availableLicenses?.[0]?.price || 49;
+        const cutPrice = beat.availableLicenses?.[0]?.defaultPrice || 499;
 
         const handlePlayToggle = (e: React.MouseEvent) => {
           e.stopPropagation();
@@ -126,8 +127,8 @@ function CompactCatalogComponent({
             <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
               {/* Starting Price Tag */}
               <div className="text-right hidden xxs:block">
-                <span className="text-[9px] text-slate-400 uppercase block sm:hidden">from</span>
-                <span className="text-xs sm:text-sm font-black text-white font-mono">
+                <span className="text-[10px] line-through text-slate-400 font-mono block">₹{cutPrice}</span>
+                <span className="text-xs sm:text-sm font-black text-electric-blue font-mono">
                   ₹{minPrice.toLocaleString()}
                 </span>
               </div>
