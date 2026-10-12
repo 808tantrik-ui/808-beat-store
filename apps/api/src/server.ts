@@ -12,6 +12,7 @@ import { authRouter } from './routes/auth.js';
 import { adminRouter } from './routes/admin.js';
 import { brandingRouter } from './routes/branding.js';
 import { contactRouter } from './routes/contact.js';
+import { razorpayStandardRouter } from './routes/razorpayStandard.js';
 
 dotenv.config();
 
@@ -104,6 +105,8 @@ app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/branding', brandingRouter);
 app.use('/api/contact', contactRouter);
+app.use('/api', razorpayStandardRouter);
+app.use('/', razorpayStandardRouter);
 
 import fs from 'fs';
 

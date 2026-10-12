@@ -147,9 +147,10 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
       await loadRazorpay();
 
       // Open Official Razorpay Checkout if window.Razorpay is loaded and order was created live with Razorpay
-      if (typeof window !== 'undefined' && (window as any).Razorpay && isLiveOrder && !keyId.includes('placeholder')) {
+      const effectiveKeyId = (import.meta as any).env?.VITE_RAZORPAY_KEY_ID || keyId;
+      if (typeof window !== 'undefined' && (window as any).Razorpay && isLiveOrder && !effectiveKeyId?.includes('placeholder')) {
         const options = {
-          key: keyId,
+          key: effectiveKeyId,
           amount,
           currency,
           name: producerName,
@@ -204,6 +205,11 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
         };
 
         const rzp = new (window as any).Razorpay(options);
+        rzp.on('payment.failed', (response: any) => {
+          console.error('[RAZORPAY PAYMENT FAILED]:', response.error);
+          setIsProcessing(false);
+          setErrorMessage(response.error?.description || 'Payment was declined or failed. Please check your bank account or retry.');
+        });
         rzp.open();
       } else {
         // Gateway unavailable - do NOT simulate or bypass payment!

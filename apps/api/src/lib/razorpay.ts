@@ -2,14 +2,16 @@ import 'dotenv/config';
 import crypto from 'crypto';
 import Razorpay from 'razorpay';
 
-const key_id = process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder_key';
-const key_secret = process.env.RAZORPAY_KEY_SECRET || 'rzp_secret_placeholder_secret';
-const webhook_secret = process.env.RAZORPAY_WEBHOOK_SECRET || 'rzp_webhook_secret_placeholder';
+export function getRazorpayClient() {
+  const key_id = process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder_key';
+  const key_secret = process.env.RAZORPAY_KEY_SECRET || 'rzp_secret_placeholder_secret';
+  return new Razorpay({
+    key_id,
+    key_secret,
+  });
+}
 
-export const razorpayClient = new Razorpay({
-  key_id,
-  key_secret,
-});
+export const razorpayClient = getRazorpayClient();
 
 /**
  * Creates a server-side Razorpay Order.
@@ -21,7 +23,8 @@ export async function createRazorpayOrder(amount: number, receipt: string, notes
   const amountInPaise = Math.round(amount * 100);
 
   try {
-    const order = await razorpayClient.orders.create({
+    const client = getRazorpayClient();
+    const order = await client.orders.create({
       amount: amountInPaise,
       currency: 'INR',
       receipt: receipt.slice(0, 40),
@@ -35,7 +38,7 @@ export async function createRazorpayOrder(amount: number, receipt: string, notes
       isLiveOrder: true,
     };
   } catch (error: any) {
-    console.warn('[RAZORPAY GATEWAY NOTICE]: Gateway order unauthenticated or offline. Falling back to internal order & direct UPI.', error.message || error);
+    console.warn('[RAZORPAY GATEWAY NOTICE]: Gateway order error:', error.message || error);
     // Graceful fallback: Never crash checkout. Generate internal order reference so customer can pay via Direct UPI
     const mockOrderId = `order_${crypto.randomBytes(8).toString('hex')}`;
     return {
@@ -57,7 +60,8 @@ export function verifyRazorpaySignature(
   paymentId: string,
   signature: string
 ): boolean {
-  if (!orderId || !paymentId || !signature) {
+  const key_secret = process.env.RAZORPAY_KEY_SECRET || '';
+  if (!orderId || !paymentId || !signature || !key_secret) {
     return false;
   }
 
@@ -86,6 +90,7 @@ export function verifyRazorpaySignature(
  */
 export function verifyWebhookSignature(rawBody: string, webhookSignature: string): boolean {
   try {
+    const webhook_secret = process.env.RAZORPAY_WEBHOOK_SECRET || 'rzp_webhook_secret_placeholder';
     const expectedSignature = crypto
       .createHmac('sha256', webhook_secret)
       .update(rawBody)
