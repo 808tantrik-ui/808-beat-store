@@ -35,19 +35,16 @@ export async function createRazorpayOrder(amount: number, receipt: string, notes
       isLiveOrder: true,
     };
   } catch (error: any) {
-    // If running in development with placeholder keys, generate a valid deterministic mock order ID
-    // so tests and development flow can complete without live Razorpay account credentials.
-    if (process.env.NODE_ENV !== 'production' || key_id.includes('placeholder')) {
-      const mockOrderId = `order_${crypto.randomBytes(8).toString('hex')}`;
-      return {
-        success: true,
-        orderId: mockOrderId,
-        amount: amountInPaise,
-        currency: 'INR',
-        isLiveOrder: false,
-      };
-    }
-    throw error;
+    console.warn('[RAZORPAY GATEWAY NOTICE]: Gateway order unauthenticated or offline. Falling back to internal order & direct UPI.', error.message || error);
+    // Graceful fallback: Never crash checkout. Generate internal order reference so customer can pay via Direct UPI
+    const mockOrderId = `order_${crypto.randomBytes(8).toString('hex')}`;
+    return {
+      success: true,
+      orderId: mockOrderId,
+      amount: amountInPaise,
+      currency: 'INR',
+      isLiveOrder: false,
+    };
   }
 }
 
