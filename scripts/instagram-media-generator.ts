@@ -41,7 +41,7 @@ export async function generateInstagramMedia(options: InstagramMediaOptions): Pr
     mood,
     wavPath,
     artworkPath,
-    storeUrl = 'https://dashing-medovik-13fc8a.netlify.app',
+    storeUrl = 'https://eight08-beat-store.onrender.com',
     reelDurationSeconds = 45, // High engagement reel duration
     storyDurationSeconds = 15 // Standard Instagram Story duration
   } = options;

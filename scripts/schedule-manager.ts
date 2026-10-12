@@ -139,7 +139,7 @@ export const scheduleManager = {
             const ytMatch = stdout.match(/https:\/\/youtu\.be\/[a-zA-Z0-9_-]+/);
             beat.youtubeUrl = ytMatch ? ytMatch[0] : 'https://youtube.com/@808beatstore';
             const slug = beat.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-            beat.storeUrl = `https://dashing-medovik-13fc8a.netlify.app/#/beats/${slug}`;
+            beat.storeUrl = `https://eight08-beat-store.onrender.com/#/beats/${slug}`;
             saveQueue(queue);
 
             if (onNotify) {

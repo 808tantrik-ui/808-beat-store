@@ -25,7 +25,7 @@ async function main() {
     artistInspiration: '',
     audioPath: wavPath,
     imagePath: artworkPath,
-    storeUrl: 'https://dashing-medovik-13fc8a.netlify.app/#/beats/missing-you',
+    storeUrl: 'https://eight08-beat-store.onrender.com/#/beats/missing-you',
     privacyStatus: 'public',
     instagramUrl: '', // Rule 4: Blank placeholder until explicitly provided
     timestamps: [     // Rule 3: Precise structural audio analysis timestamps

@@ -373,7 +373,7 @@ client.on('message_create', async (msg) => {
           const ytMatch = stdoutData.match(/https:\/\/youtu\.be\/[a-zA-Z0-9_-]+/);
           const ytUrl = ytMatch ? ytMatch[0] : 'https://youtube.com/@808beatstore';
           const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-          const storeUrl = `https://dashing-medovik-13fc8a.netlify.app/#/beats/${slug}`;
+          const storeUrl = `https://eight08-beat-store.onrender.com/#/beats/${slug}`;
 
           const reelFile = path.resolve(`public/assets/instagram/${slug}-reel-9x16.mp4`);
           const storyFile = path.resolve(`public/assets/instagram/${slug}-story-9x16.mp4`);
@@ -521,7 +521,7 @@ client.on('message_create', async (msg) => {
       const content = fs.readFileSync(fallbackPath, 'utf-8');
       const titles = [...content.matchAll(/"title":\s*"([^"]+)"/g)].map(m => m[1]);
       const listText = titles.slice(0, 10).map((t, i) => `${i + 1}. ${t}`).join('\n');
-      await replyToSelfChat(`COMPLETED: [Status: Task Completed successfully]\n\n🎵 808 Beat Store Catalog (${titles.length} Tracks):\n${listText}\n\n🌐 https://dashing-medovik-13fc8a.netlify.app/#/beats`);
+      await replyToSelfChat(`COMPLETED: [Status: Task Completed successfully]\n\n🎵 808 Beat Store Catalog (${titles.length} Tracks):\n${listText}\n\n🌐 https://eight08-beat-store.onrender.com/#/beats`);
       return;
     }
   }
@@ -752,7 +752,7 @@ Bot will autonomously execute each drop daily at 7:30 PM IST without needing any
     const buildProc = spawn('npm', ['run', 'build:web'], { shell: true });
     buildProc.on('close', async (code) => {
       if (code === 0) {
-        await replyToSelfChat(`COMPLETED: [Status: Task Completed successfully] - Website built and ready. Live: https://dashing-medovik-13fc8a.netlify.app`);
+        await replyToSelfChat(`COMPLETED: [Status: Task Completed successfully] - Website built and ready. Live: https://eight08-beat-store.onrender.com`);
       } else {
         await replyToSelfChat(`COMPLETED: [Status: Build finished with code ${code}]`);
       }
@@ -770,7 +770,7 @@ Bot will autonomously execute each drop daily at 7:30 PM IST without needing any
 • Target: Self-Chat Only (Protocol Enforced)
 • Channel: @808beatstore
 • Instagram: https://www.instagram.com/808_beatstore
-• Website: https://dashing-medovik-13fc8a.netlify.app
+• Website: https://eight08-beat-store.onrender.com
 
 Binary Protocol: Every action triggers 'STARTED' followed by 'COMPLETED'.
 Commands: Drive Beat link, Price, UPI ID, Delete beat, List, Tagline, About, Instagram, Schedule (30 Days), Rebuild.`;

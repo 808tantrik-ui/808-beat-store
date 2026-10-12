@@ -33,7 +33,7 @@ export interface BeatVideoMetadata {
  * Generates high-converting, high-ranking SEO metadata for YouTube Beat uploads
  */
 export function generateBeatSEO(meta: BeatVideoMetadata) {
-  const storeLink = meta.storeUrl || 'https://dashing-medovik-13fc8a.netlify.app';
+  const storeLink = meta.storeUrl || 'https://eight08-beat-store.onrender.com';
   const style = meta.style || 'Hip-Hop';
   const mood = meta.mood || 'Dark';
   const bpm = meta.bpm || '140';
@@ -204,7 +204,7 @@ export async function uploadToYouTube(videoPath: string, meta: BeatVideoMetadata
  * Generates viral hook-driven captions and 3-tier hashtag bundles for Instagram Reels & Posts
  */
 export function generateInstagramBundle(meta: BeatVideoMetadata) {
-  const storeLink = meta.storeUrl || 'https://dashing-medovik-13fc8a.netlify.app';
+  const storeLink = meta.storeUrl || 'https://eight08-beat-store.onrender.com';
   const cleanStyle = (meta.style || 'HipHop').replace(/[^a-zA-Z0-9]/g, '');
   const cleanMood = (meta.mood || 'Vibes').replace(/[^a-zA-Z0-9]/g, '');
 

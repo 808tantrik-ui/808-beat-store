@@ -39,7 +39,7 @@ interface BeatEntry {
 }
 
 const INSTAGRAM_URL = 'https://www.instagram.com/808_beatstore?stkn=MWxnMmFqaWJjbWZlOQ%3D%3D&utm_source=qr';
-const STORE_BASE_URL = 'https://dashing-medovik-13fc8a.netlify.app';
+const STORE_BASE_URL = 'https://eight08-beat-store.onrender.com';
 
 function generateCleanDescription(b: BeatEntry, slug: string) {
   const storeLink = `${STORE_BASE_URL}/#/beats/${slug}`;

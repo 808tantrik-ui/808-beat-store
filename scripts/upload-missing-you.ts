@@ -23,7 +23,7 @@ async function main() {
     artistInspiration: 'Juice WRLD x XXXTentacion',
     audioPath: path.resolve('public/assets/audio/missing-you.wav'),
     imagePath: path.resolve('public/assets/artwork/missing-you.jpg'),
-    storeUrl: 'https://dashing-medovik-13fc8a.netlify.app/#/beats/missing-you',
+    storeUrl: 'https://eight08-beat-store.onrender.com/#/beats/missing-you',
     privacyStatus: 'public'
   });
 

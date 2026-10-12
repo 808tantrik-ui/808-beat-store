@@ -100,7 +100,7 @@ async function main() {
   }
 
   // 5. Upload to YouTube
-  const storeUrl = `https://dashing-medovik-13fc8a.netlify.app/#/beats/${slug}`;
+  const storeUrl = `https://eight08-beat-store.onrender.com/#/beats/${slug}`;
   console.log(`🚀 Uploading to YouTube Channel @808beatstore...`);
 
   const uploadResult = await uploadToYouTube(videoPath, {
@@ -141,7 +141,7 @@ async function main() {
       mood,
       wavPath,
       artworkPath: cleanArtworkPath,
-      storeUrl: 'https://dashing-medovik-13fc8a.netlify.app'
+      storeUrl: 'https://eight08-beat-store.onrender.com'
     });
 
     igPublishResult = await publishToInstagram({

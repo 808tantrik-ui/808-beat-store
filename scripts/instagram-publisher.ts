@@ -47,7 +47,7 @@ export async function publishToInstagram(options: InstagramPublishOptions): Prom
       console.log(`📡 Connecting to Meta Graph API for Instagram Account ${igUserId}...`);
       
       // Resolve public URL for video if hosted, or Cloudflare R2 / App URL
-      const appUrl = process.env.APP_URL || 'https://dashing-medovik-13fc8a.netlify.app';
+      const appUrl = process.env.APP_URL || 'https://eight08-beat-store.onrender.com';
       const reelRelative = path.basename(reelVideoPath);
       const videoPublicUrl = `${appUrl}/assets/instagram/${reelRelative}`;
 
