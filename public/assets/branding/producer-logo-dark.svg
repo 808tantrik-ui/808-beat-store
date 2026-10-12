@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" fill="none">
+  <defs>
+    <linearGradient id="neonGlowGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+
+    <linearGradient id="emblemBorderDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#3B82F6" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#A855F7" stop-opacity="0.9" />
+    </linearGradient>
+
+    <linearGradient id="emblemBgDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#14142B" />
+      <stop offset="100%" stop-color="#070712" />
+    </linearGradient>
+
+    <filter id="proGlowDark" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- 808 Studio Emblem -->
+  <g transform="translate(6, 6)">
+    <rect x="0" y="0" width="52" height="52" rx="16" fill="#0066FF" fill-opacity="0.2" filter="url(#proGlowDark)" />
+    <rect x="0" y="0" width="52" height="52" rx="16" fill="url(#emblemBgDark)" stroke="url(#emblemBorderDark)" stroke-width="1.8" />
+
+    <circle cx="17" cy="20" r="4.2" stroke="url(#neonGlowGradDark)" stroke-width="2.2" fill="#070712" />
+    <circle cx="17" cy="32" r="4.2" stroke="url(#neonGlowGradDark)" stroke-width="2.2" fill="#070712" />
+    <circle cx="17" cy="26" r="1.5" fill="#00F0FF" />
+
+    <g transform="translate(23.5, 14)">
+      <rect x="0" y="7" width="2" height="10" rx="1" fill="#00F0FF" opacity="0.9" />
+      <rect x="3.2" y="3" width="2.2" height="18" rx="1.1" fill="#FFFFFF" filter="url(#proGlowDark)" />
+      <rect x="6.8" y="7" width="2" height="10" rx="1" fill="#3B82F6" opacity="0.9" />
+    </g>
+
+    <circle cx="35" cy="20" r="4.2" stroke="url(#neonGlowGradDark)" stroke-width="2.2" fill="#070712" />
+    <circle cx="35" cy="32" r="4.2" stroke="url(#neonGlowGradDark)" stroke-width="2.2" fill="#070712" />
+    <circle cx="35" cy="26" r="1.5" fill="#A855F7" />
+  </g>
+
+  <!-- Brand Typography -->
+  <g transform="translate(70, 0)">
+    <text x="0" y="36" font-family="'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="23" letter-spacing="1">
+      <tspan fill="url(#neonGlowGradDark)">808</tspan>
+      <tspan fill="#FFFFFF" dx="6">BEAT</tspan>
+      <tspan fill="#E2E8F0" dx="5">STORE</tspan>
+    </text>
+
+    <g transform="translate(1, 44)">
+      <circle cx="3" cy="6" r="2.2" fill="#00F0FF" filter="url(#proGlowDark)" />
+      <text x="10" y="9" font-family="'Inter', system-ui, sans-serif" font-weight="700" font-size="8.5" letter-spacing="3" fill="#94A3B8">
+        PREMIUM AUDIO MARKETPLACE
+      </text>
+    </g>
+  </g>
+</svg>

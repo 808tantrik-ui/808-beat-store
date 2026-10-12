@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>808 Beat Store - Official YouTube DP</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #05050a;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .preview-card {
+      background: #0d0d18;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 102, 255, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00F0FF, #3B82F6, #A855F7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .avatar-wrapper {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 50px rgba(0, 240, 255, 0.4), inset 0 0 30px rgba(0,0,0,0.8);
+      border: 3px solid rgba(0, 240, 255, 0.6);
+      background: #070712;
+    }
+    canvas {
+      display: none;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+    .btn {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-align: center;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #00F0FF, #0066FF);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    }
+    .btn-secondary {
+      background: #1e1e38;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-secondary:hover {
+      background: #2a2a4e;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-card">
+    <h1>808 Beat Store Official DP</h1>
+    <p>Ye tumhari website ka <b>Official Identical Logo</b> hai jo YouTube profile picture ke liye 1000x1000 HD me render kiya gaya hai.</p>
+
+    <div class="avatar-wrapper">
+      <img id="previewImg" src="" alt="YouTube DP Preview" style="width: 100%; height: 100%; object-fit: cover;" />
+    </div>
+
+    <div class="btn-row">
+      <a id="downloadBtn" download="808-official-yt-dp.png" class="btn btn-primary">
+        ⬇️ Download HD DP (PNG)
+      </a>
+      <a href="https://studio.youtube.com/channel/UC/editing/profile" target="_blank" class="btn btn-secondary">
+        ⚡ Open YouTube Studio
+      </a>
+    </div>
+  </div>
+
+  <canvas id="dpCanvas" width="1000" height="1000"></canvas>
+
+  <script>
+    const canvas = document.getElementById('dpCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 1. Dark Studio Gradient Background
+    const bgGrad = ctx.createRadialGradient(500, 500, 50, 500, 500, 700);
+    bgGrad.addColorStop(0, '#101026');
+    bgGrad.addColorStop(0.6, '#070712');
+    bgGrad.addColorStop(1, '#030308');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1000, 1000);
+
+    // 2. Outer Ambient Glow Ring
+    const ringGrad = ctx.createLinearGradient(150, 150, 850, 850);
+    ringGrad.addColorStop(0, '#00F0FF');
+    ringGrad.addColorStop(0.5, '#0066FF');
+    ringGrad.addColorStop(1, '#8A2BE2');
+
+    ctx.save();
+    ctx.shadowColor = '#00F0FF';
+    ctx.shadowBlur = 60;
+    ctx.strokeStyle = ringGrad;
+    ctx.lineWidth = 14;
+    ctx.beginPath();
+    ctx.arc(500, 500, 420, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    // 3. Subtle grid lines / audio circular pulse
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(500, 500, 360, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(500, 500, 300, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // 4. Center Rounded Studio Shield
+    const shieldGrad = ctx.createLinearGradient(250, 250, 750, 750);
+    shieldGrad.addColorStop(0, '#161633');
+    shieldGrad.addColorStop(1, '#090915');
+    
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 102, 255, 0.5)';
+    ctx.shadowBlur = 40;
+    roundRect(ctx, 230, 230, 540, 540, 110);
+    ctx.fillStyle = shieldGrad;
+    ctx.fill();
+    ctx.strokeStyle = ringGrad;
+    ctx.lineWidth = 8;
+    ctx.stroke();
+    ctx.restore();
+
+    // 5. Stylized 808 Equalizer Core (Matching Website Exactly)
+    // Left '8': two neon cyan circles
+    const neonGrad = ctx.createLinearGradient(300, 350, 700, 650);
+    neonGrad.addColorStop(0, '#00F0FF');
+    neonGrad.addColorStop(0.5, '#3B82F6');
+    neonGrad.addColorStop(1, '#A855F7');
+
+    function drawEight(cx, cy) {
+      ctx.save();
+      ctx.lineWidth = 18;
+      ctx.strokeStyle = neonGrad;
+      ctx.shadowColor = '#00F0FF';
+      ctx.shadowBlur = 20;
+
+      // Top circle
+      ctx.beginPath();
+      ctx.arc(cx, cy - 42, 44, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Bottom circle
+      ctx.beginPath();
+      ctx.arc(cx, cy + 42, 44, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inner dot
+      ctx.fillStyle = '#00F0FF';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Left 8
+    drawEight(360, 470);
+
+    // Right 8
+    drawEight(640, 470);
+
+    // Center Equalizer Soundwave Bars
+    ctx.save();
+    // Bar 1 (Left Cyan)
+    ctx.fillStyle = '#00F0FF';
+    ctx.shadowColor = '#00F0FF';
+    ctx.shadowBlur = 25;
+    roundRect(ctx, 455, 415, 14, 110, 7);
+    ctx.fill();
+
+    // Bar 2 (Center White Tall)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.shadowColor = '#FFFFFF';
+    ctx.shadowBlur = 30;
+    roundRect(ctx, 492, 375, 16, 190, 8);
+    ctx.fill();
+
+    // Bar 3 (Right Blue)
+    ctx.fillStyle = '#3B82F6';
+    ctx.shadowColor = '#3B82F6';
+    ctx.shadowBlur = 25;
+    roundRect(ctx, 531, 415, 14, 110, 7);
+    ctx.fill();
+    ctx.restore();
+
+    // 6. Subtext: "BEAT STORE"
+    ctx.save();
+    ctx.font = '900 36px "Outfit", system-ui, sans-serif';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.textAlign = 'center';
+    ctx.letterSpacing = '10px';
+    ctx.fillText('BEAT STORE', 500, 690);
+
+    // Small Cyan Accent Dot
+    ctx.fillStyle = '#00F0FF';
+    ctx.beginPath();
+    ctx.arc(500, 722, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Convert Canvas to Data URL and set Image & Download link
+    const dataUrl = canvas.toDataURL('image/png');
+    document.getElementById('previewImg').src = dataUrl;
+    document.getElementById('downloadBtn').href = dataUrl;
+  </script>
+</body>
+</html>

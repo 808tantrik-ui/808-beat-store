@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>808 Beat Store | Premium Hip-Hop Beats</title>
+    <meta name="description" content="Explore exclusive and non-exclusive premium hip-hop beats from 808 Beat Store. High-fidelity instrumentals with multi-track stems and instant commercial licensing." />
+    <link rel="icon" type="image/svg+xml" href="/assets/branding/favicon.svg" />
+    
+    <!-- Open Graph / Meta -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="808 Beat Store | Premium Hip-Hop Beats" />
+    <meta property="og:description" content="High-fidelity hip-hop instrumentals with multi-track stems and instant commercial licensing from 808 Beat Store." />
+    <meta property="og:image" content="/assets/branding/producer-logo.svg" />
+    
+    <!-- Google Fonts: Inter & Outfit (Only 2 families, 3 weights with font-display: swap) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@700&display=swap" rel="stylesheet" />
+
+
+    <!-- Pannellum 360 Panorama Viewer (Deferred) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.js" defer></script>
+
+    <style>
+      /* Prevent any white flash before CSS loads */
+      html, body {
+        background-color: #050505;
+        color: #ffffff;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      }
+      /* Custom dark scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0D0D12;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #252535;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3B3B52;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-text min-h-screen antialiased selection:bg-electric-blue selection:text-white">
+    <div id="root">
+      <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #07070b; color: #ffffff; font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+        <div style="width: 44px; height: 44px; border: 3px solid rgba(0, 102, 255, 0.25); border-top-color: #0066FF; border-radius: 50%; animation: spin 0.7s linear infinite;"></div>
+        <div style="margin-top: 18px; font-weight: 900; font-size: 15px; letter-spacing: 2px; color: #ffffff;">808 BEAT STORE</div>
+        <div style="color: #94a3b8; font-size: 12px; margin-top: 6px;">Loading studio instrumentals...</div>
+      </div>
+      <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+      </style>
+    </div>
+    <script type="module" src="/apps/web/src/main.tsx"></script>
+  </body>
+</html>

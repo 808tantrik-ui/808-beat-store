@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+*.log
+*.zip
+.wwebjs_cache/
+data/wa-session/
+my data/
+mydata/
+"hero videos/"
+temp_analysis.pcm

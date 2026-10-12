@@ -1,0 +1,247 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String?
+  name         String?
+  role         String    @default("CUSTOMER") // "CUSTOMER" | "ADMIN"
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  orders       Order[]
+  carts        Cart[]
+  adminProfile Admin?
+}
+
+model Admin {
+  id          String    @id @default(uuid())
+  userId      String    @unique
+  permissions String    @default("ALL")
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Beat {
+  id                  String       @id @default(uuid())
+  title               String
+  slug                String       @unique
+  description         String?
+  artwork             String
+  previewAudio        String
+  privateMp3          String?      // Private R2 storage key
+  privateWav          String?      // Private R2 storage key
+  privateStems        String?      // Private R2 storage key
+  bpm                 Int
+  key                 String
+  duration            Int          // In seconds
+  mood                String       // e.g. "Emotional", "Dark", "Melodic", "Energetic", "Chill"
+  style               String       // e.g. "Boom Bap", "Lo-Fi Hip-Hop", "East Coast", "Soul Hip-Hop"
+  genre               String       @default("Hip-Hop")
+  producerName        String?
+  producerDisplayName String?
+  copyrightOwner      String?
+  publisher           String?
+  status              String       @default("PUBLISHED") // "DRAFT" | "PUBLISHED" | "ARCHIVED"
+  featured            Boolean      @default(false)
+  playsCount          Int          @default(0)
+  salesCount          Int          @default(0)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  assets              BeatAsset[]
+  orderItems          OrderItem[]
+  downloads           Download[]
+  licenseDocuments    LicenseDocument[]
+}
+
+model BeatAsset {
+  id         String   @id @default(uuid())
+  beatId     String
+  assetType  String   // "PREVIEW" | "MP3" | "WAV" | "STEMS" | "ARTWORK"
+  storageKey String
+  fileSize   Int?
+  mimeType   String?
+  checksum   String?
+  createdAt  DateTime @default(now())
+
+  beat       Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
+}
+
+model License {
+  id                     String           @id @default(uuid())
+  name                   String           @unique // "NON_EXCLUSIVE_MP3", "NON_EXCLUSIVE_WAV", "PREMIUM_STEMS", "EXCLUSIVE"
+  displayName            String
+  description            String
+  price                  Float
+  defaultPrice           Float
+  isExclusive            Boolean          @default(false)
+  includedFiles          String           // JSON array string e.g. '["MP3", "WAV"]'
+  commercialUsage        String
+  streamingLimit         Int?             // e.g. 100000 streams (null for unlimited)
+  distributionLimit      Int?             // e.g. 5000 physical copies
+  musicVideoLimit        Int?             // e.g. 1 commercial video
+  radioBroadcasting      Boolean          @default(false)
+  forProfitPerformances  Boolean          @default(false)
+  creditRequirement      String           @default("Must credit: (Prod. by [PRODUCER_NAME])")
+  active                 Boolean          @default(true)
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+
+  features               LicenseFeature[]
+  orderItems             OrderItem[]
+  licenseDocuments       LicenseDocument[]
+}
+
+model LicenseFeature {
+  id          String   @id @default(uuid())
+  licenseId   String
+  featureText String
+  isHighlight Boolean  @default(false)
+  license     License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String?
+  sessionId String     @unique
+  updatedAt DateTime   @updatedAt
+  user      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  beatId    String
+  licenseId String
+  price     Float
+  createdAt DateTime @default(now())
+
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id                 String            @id @default(uuid())
+  orderNumber        String            @unique
+  userId             String?
+  customerName       String
+  customerEmail      String
+  subtotal           Float
+  discount           Float             @default(0)
+  total              Float
+  currency           String            @default("INR")
+  status             String            @default("PENDING") // "PENDING" | "PROCESSING" | "PAID" | "FAILED" | "CANCELLED" | "REFUNDED"
+  razorpayOrderId    String?           @unique
+  razorpayPaymentId  String?           @unique
+  razorpaySignature  String?
+  paidAt             DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  user               User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items              OrderItem[]
+  payments           Payment[]
+  downloads          Download[]
+  licenseDocuments   LicenseDocument[]
+  emailLogs          EmailLog[]
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String
+  beatId      String
+  licenseId   String
+  beatTitle   String
+  licenseName String
+  price       Float
+  createdAt   DateTime @default(now())
+
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  beat        Beat     @relation(fields: [beatId], references: [id], onDelete: Restrict)
+  license     License  @relation(fields: [licenseId], references: [id], onDelete: Restrict)
+}
+
+model Payment {
+  id                String    @id @default(uuid())
+  orderId           String
+  provider          String    @default("RAZORPAY")
+  razorpayOrderId   String
+  razorpayPaymentId String
+  razorpaySignature String?
+  amount            Float
+  currency          String    @default("INR")
+  status            String    // "AUTHORIZED" | "CAPTURED" | "FAILED"
+  webhookPayload    String?   // Raw JSON audit log
+  verifiedAt        DateTime?
+  createdAt         DateTime  @default(now())
+
+  order             Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Download {
+  id               String    @id @default(uuid())
+  orderId          String
+  beatId           String
+  assetType        String    // "MP3" | "WAV" | "STEMS" | "LICENSE_PDF" | "RECEIPT"
+  downloadToken    String    @unique
+  expiresAt        DateTime
+  downloadCount    Int       @default(0)
+  maxDownloads     Int       @default(10)
+  isRevoked        Boolean   @default(false)
+  lastDownloadedAt DateTime?
+  createdAt        DateTime  @default(now())
+
+  order            Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  beat             Beat      @relation(fields: [beatId], references: [id], onDelete: Cascade)
+}
+
+model LicenseDocument {
+  id             String   @id @default(uuid())
+  orderId        String
+  beatId         String
+  licenseId      String
+  documentNumber String   @unique
+  licenseTerms   String
+  customerName   String
+  customerEmail  String
+  beatTitle      String
+  producerName   String
+  copyrightOwner String
+  issuedAt       DateTime @default(now())
+  pdfStorageKey  String?
+  signatureHash  String?
+
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  beat           Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
+  license        License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+}
+
+model BrandConfig {
+  id          String   @id @default(uuid())
+  configJson  String
+  isCurrent   Boolean  @default(true)
+  updatedBy   String?
+  updatedAt   DateTime @updatedAt
+}
+
+model EmailLog {
+  id                String   @id @default(uuid())
+  type              String   // "ORDER_CONFIRMATION" | "LICENSE_DELIVERY" | "PAYMENT_FAILED"
+  recipient         String
+  orderId           String?
+  status            String   // "SENT" | "FAILED" | "QUEUED"
+  providerMessageId String?
+  error             String?
+  createdAt         DateTime @default(now())
+
+  order             Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+}
