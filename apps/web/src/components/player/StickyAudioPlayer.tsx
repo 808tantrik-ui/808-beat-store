@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAudioStore } from '../../store/useAudioStore';
 import { useCartStore } from '../../store/useCartStore';
+import { useModalStore } from '../../store/useModalStore';
 import { AudioWaveform } from './AudioWaveform';
 import { BeatDTO } from '@shared/types';
 
@@ -38,6 +39,7 @@ export function StickyAudioPlayer({ onOpenLicenseModal }: StickyAudioPlayerProps
   } = useAudioStore();
 
   const { addItem } = useCartStore();
+  const { openFullScreenPlayer } = useModalStore();
   const [isExpandedMobile, setIsExpandedMobile] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
 
@@ -51,12 +53,18 @@ export function StickyAudioPlayer({ onOpenLicenseModal }: StickyAudioPlayerProps
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
-  const handleSelectLicense = () => {
+  const handleSelectLicense = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     if (onOpenLicenseModal && currentTrack) {
       onOpenLicenseModal(currentTrack);
     } else if (currentTrack.availableLicenses?.[0]) {
       addItem(currentTrack, currentTrack.availableLicenses[0]);
     }
+  };
+
+  const handleBarTap = (e: React.MouseEvent | React.TouchEvent) => {
+    // Only open if the click was not on an interactive child button
+    openFullScreenPlayer();
   };
 
   // Functional Seek Handlers
@@ -160,7 +168,11 @@ export function StickyAudioPlayer({ onOpenLicenseModal }: StickyAudioPlayerProps
           )}
 
           {/* Compact Main Mobile Bar */}
-          <div className="flex items-center justify-between gap-3">
+          <div
+            onClick={handleBarTap}
+            className="flex items-center justify-between gap-3 cursor-pointer select-none active:bg-white/[0.03] rounded-xl transition-colors py-0.5"
+            title="Tap to open full-screen player"
+          >
             {/* Left: Enlarged Rounded Thumbnail & Track Info */}
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <img
@@ -170,15 +182,12 @@ export function StickyAudioPlayer({ onOpenLicenseModal }: StickyAudioPlayerProps
                 height={48}
                 loading="lazy"
                 decoding="async"
-                className="w-12 h-12 rounded-xl object-cover border border-white/15 shadow-md shrink-0"
+                className="w-12 h-12 rounded-xl object-cover border border-white/15 shadow-md shrink-0 pointer-events-none"
               />
               <div className="min-w-0 flex-1">
-                <Link
-                  to={`/beats/${currentTrack.slug}`}
-                  className="text-xs font-bold text-white hover:text-electric-cyan transition-colors truncate block"
-                >
+                <span className="text-xs font-bold text-white hover:text-electric-cyan transition-colors truncate block">
                   {currentTrack.title}
-                </Link>
+                </span>
                 <div className="flex items-center gap-1.5 text-[10px] text-slate-300 mt-0.5">
                   <span className="text-electric-cyan font-mono font-semibold">{currentTrack.bpm} BPM</span>
                   <span>•</span>
@@ -190,11 +199,14 @@ export function StickyAudioPlayer({ onOpenLicenseModal }: StickyAudioPlayerProps
             </div>
 
             {/* Right: Play/Pause, Highlighted Accent Price Button, and Expand */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
               <button
-                onClick={togglePlay}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  togglePlay();
+                }}
                 aria-label={isPlaying ? 'Pause' : 'Play'}
-                className="w-9 h-9 rounded-full bg-electric-blue text-white flex items-center justify-center shadow-glow-blue active:scale-95 transition-all"
+                className="w-9 h-9 rounded-full bg-electric-blue text-white flex items-center justify-center shadow-glow-blue active:scale-95 transition-all cursor-pointer"
               >
                 {isPlaying ? (
                   <Pause className="w-4 h-4 fill-current" />
@@ -205,19 +217,26 @@ export function StickyAudioPlayer({ onOpenLicenseModal }: StickyAudioPlayerProps
 
               {/* Highlighted Accent Price Button (Clickable Appearance) */}
               <button
-                onClick={handleSelectLicense}
-                className="px-3 py-2 rounded-xl bg-gradient-to-r from-electric-blue via-blue-600 to-electric-cyan text-white text-xs font-extrabold shadow-glow-blue flex items-center gap-1.5 active:scale-95 hover:brightness-110 transition-all border border-white/20"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSelectLicense(e);
+                }}
+                className="px-3 py-2 rounded-xl bg-gradient-to-r from-electric-blue via-blue-600 to-electric-cyan text-white text-xs font-extrabold shadow-glow-blue flex items-center gap-1.5 active:scale-95 hover:brightness-110 transition-all border border-white/20 cursor-pointer"
               >
                 <ShoppingCart className="w-3.5 h-3.5 fill-current" />
-                <span>₹{currentTrack.availableLicenses?.[0]?.price?.toLocaleString() || '1,999'}</span>
+                <span>₹{currentTrack.availableLicenses?.[0]?.price?.toLocaleString() || '49'}</span>
               </button>
 
               <button
-                onClick={() => setIsExpandedMobile(!isExpandedMobile)}
-                className="p-1.5 text-text-muted hover:text-white rounded-lg bg-surface-light border border-surface-border/60 active:scale-95"
-                aria-label="Toggle waveform player"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openFullScreenPlayer();
+                }}
+                className="p-1.5 text-text-muted hover:text-white rounded-lg bg-surface-light border border-surface-border/60 active:scale-95 cursor-pointer"
+                aria-label="Expand full-screen player"
+                title="Expand full-screen player"
               >
-                {isExpandedMobile ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                <ChevronUp className="w-4 h-4 text-electric-cyan" />
               </button>
             </div>
           </div>
@@ -228,23 +247,29 @@ export function StickyAudioPlayer({ onOpenLicenseModal }: StickyAudioPlayerProps
         {/* ========================================================================= */}
         <div className="hidden sm:flex flex-row items-center justify-between gap-6">
           {/* Left: Beat Information & Thumbnail */}
-          <div className="flex items-center gap-3 w-1/4 min-w-[200px]">
-            <img
-              src={currentTrack.artwork}
-              alt={currentTrack.title}
-              width={52}
-              height={52}
-              loading="lazy"
-              decoding="async"
-              className="w-13 h-13 rounded-lg object-cover border border-surface-border shadow-md shrink-0"
-            />
+          <div
+            onClick={openFullScreenPlayer}
+            className="flex items-center gap-3 w-1/4 min-w-[200px] cursor-pointer group"
+            title="Click to expand full-screen player"
+          >
+            <div className="relative shrink-0">
+              <img
+                src={currentTrack.artwork}
+                alt={currentTrack.title}
+                width={52}
+                height={52}
+                loading="lazy"
+                decoding="async"
+                className="w-13 h-13 rounded-lg object-cover border border-surface-border shadow-md group-hover:scale-105 transition-transform"
+              />
+              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 rounded-lg flex items-center justify-center transition-opacity">
+                <ChevronUp className="w-4 h-4 text-white" />
+              </div>
+            </div>
             <div className="truncate">
-              <Link
-                to={`/beats/${currentTrack.slug}`}
-                className="text-base font-bold text-white hover:text-electric-cyan transition-colors truncate block"
-              >
+              <span className="text-base font-bold text-white group-hover:text-electric-cyan transition-colors truncate block">
                 {currentTrack.title}
-              </Link>
+              </span>
               <div className="flex items-center gap-2 text-[11px] text-text-muted mt-0.5">
                 <span className="px-1.5 py-0.2 rounded bg-surface-lighter text-electric-cyan font-mono text-[10px]">
                   {currentTrack.bpm} BPM

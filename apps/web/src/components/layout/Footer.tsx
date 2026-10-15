@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Lock } from 'lucide-react';
 import { producerBrand, brandHelpers } from '@config/brand';
+import { openInstagram, openYouTube, OFFICIAL_SOCIALS } from '../../utils/deepLinks';
 
 interface FooterProps {
   onNavigate?: (route: string) => void;
@@ -13,7 +14,8 @@ export function Footer({ onNavigate }: FooterProps) {
   const activeSocials = [
     {
       name: 'Instagram',
-      url: 'https://www.instagram.com/808_beatstore?stkn=MWxnMmFqaWJjbWZlOQ%3D%3D&utm_source=qr',
+      url: OFFICIAL_SOCIALS.instagram.webUrl,
+      onClick: openInstagram,
       color: 'hover:text-pink-400 hover:border-pink-500/40 hover:bg-pink-500/10',
       icon: (
         <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -23,7 +25,8 @@ export function Footer({ onNavigate }: FooterProps) {
     },
     {
       name: 'YouTube',
-      url: 'https://youtube.com/@808beatstore?si=Gm2bZSIbAbnFDHN5',
+      url: OFFICIAL_SOCIALS.youtube.webUrl,
+      onClick: openYouTube,
       color: 'hover:text-red-400 hover:border-red-500/40 hover:bg-red-500/10',
       icon: (
         <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -75,9 +78,10 @@ export function Footer({ onNavigate }: FooterProps) {
                   <a
                     key={s.name}
                     href={s.url}
+                    onClick={s.onClick}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-slate-300 transition-all ${s.color}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-slate-300 transition-all ${s.color} cursor-pointer`}
                     aria-label={s.name}
                   >
                     {s.icon}

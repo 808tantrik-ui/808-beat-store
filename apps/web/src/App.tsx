@@ -8,6 +8,8 @@ import { CartDrawer } from './components/cart/CartDrawer';
 import { LicenseModal } from './components/ui/LicenseModal';
 import { AuthModal } from './components/auth/AuthModal';
 import { GlowingCursor } from './components/ui/GlowingCursor';
+import { GalaxyInfinityLoader } from './components/ui/GalaxyInfinityLoader';
+import { FullScreenPlayerModal } from './components/player/FullScreenPlayerModal';
 import { HomePage } from './pages/HomePage';
 import { BeatDTO, LicenseDTO } from '@shared/types';
 import { useAuthStore } from './store/useAuthStore';
@@ -270,6 +272,12 @@ export function App() {
 
       {/* Glassmorphic Sign-In / Register Modal */}
       <AuthModal />
+
+      {/* Full-Screen Music Player Modal Overlay */}
+      <FullScreenPlayerModal onOpenLicenseModal={openLicenseModal} />
+
+      {/* Fast Galaxy Infinity Initial Loader (Snappy & Never Hangs) */}
+      <GalaxyInfinityLoader maxDurationMs={850} />
     </div>
   );
 }

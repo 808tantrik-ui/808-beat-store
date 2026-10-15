@@ -286,34 +286,41 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             {/* Customer Inputs */}
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-white mb-1.5 uppercase tracking-wider">
-                  Artist / Company / Stage Name *
+                <label className="block text-xs font-bold text-slate-200 mb-1.5 uppercase tracking-wider flex items-center justify-between">
+                  <span>Artist / Stage / Production Name *</span>
+                  <span className="text-[10px] font-mono text-cyan-400 font-normal">Printed on License PDF</span>
                 </label>
-                <input
-                  type="text"
-                  required
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="e.g. Kendrick / OVO Sound / Artist Name"
-                  className="w-full bg-[#141522] border border-surface-border rounded-xl px-4 py-3.5 text-sm text-white placeholder-text-subtle focus:outline-none focus:border-electric-blue focus:ring-1 focus:ring-electric-blue transition-all"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="e.g. 808 Tantrik / Artist Name"
+                    className="w-full bg-[#121320] border border-white/15 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 rounded-xl px-4 py-3.5 text-base sm:text-sm text-white placeholder-slate-500 transition-all outline-none"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white mb-1.5 uppercase tracking-wider">
-                  Delivery Email Address *
+                <label className="block text-xs font-bold text-slate-200 mb-1.5 uppercase tracking-wider flex items-center justify-between">
+                  <span>Delivery Email Address *</span>
+                  <span className="text-[10px] font-mono text-emerald-400 font-normal">Instant Vault Access</span>
                 </label>
-                <input
-                  type="email"
-                  required
-                  value={customerEmail}
-                  onChange={(e) => setCustomerEmail(e.target.value)}
-                  placeholder="artist@recordlabel.com"
-                  className="w-full bg-[#141522] border border-surface-border rounded-xl px-4 py-3.5 text-sm text-white placeholder-text-subtle focus:outline-none focus:border-electric-blue focus:ring-1 focus:ring-electric-blue transition-all"
-                />
-                <span className="text-[11px] text-text-subtle mt-1.5 block">
-                  🔒 Studio WAV master files & legally binding PDF license will be delivered to this email instantly.
-                </span>
+                <div className="relative">
+                  <input
+                    type="email"
+                    required
+                    value={customerEmail}
+                    onChange={(e) => setCustomerEmail(e.target.value)}
+                    placeholder="artist@gmail.com"
+                    className="w-full bg-[#121320] border border-white/15 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 rounded-xl px-4 py-3.5 text-base sm:text-sm text-white placeholder-slate-500 transition-all outline-none"
+                  />
+                </div>
+                <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-2">
+                  <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                  <span>Uncompressed 24-bit WAVs, 320kbps MP3s & cryptographically signed PDF license contract will be sent here immediately.</span>
+                </div>
               </div>
             </div>
 

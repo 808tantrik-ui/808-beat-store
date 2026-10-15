@@ -12,7 +12,7 @@ try {
 
   // 2. Commit changes
   console.log('📝 Creating commit...');
-  execSync(`"${gitPath}" commit -m "feat: promotional pricing 49/499 (cut 499/5999), clean razorpay checkout without qr"`, { stdio: 'inherit' });
+  execSync(`"${gitPath}" commit -m "feat: galaxy infinity loader, explore 360 quick access, full-screen player fix, checkout polish, 808 tantrik bio, social deep-linking"`, { stdio: 'inherit' });
 
   // 3. Push to origin main
   console.log('⬆️ Pushing to GitHub (origin main)...');

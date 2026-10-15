@@ -5,11 +5,13 @@ import {
   ShieldCheck,
   Disc3,
   Sparkles,
+  Compass,
 } from 'lucide-react';
 import { producerBrand, brandHelpers } from '@config/brand';
 import { BeatDTO, LicenseDTO } from '@shared/types';
 import { HeroReelsRow } from '../components/catalog/HeroReelsRow';
 import { CoverFlow3D } from '../components/canvas/CoverFlow3D';
+import { Studio360Viewer } from '../components/ui/Studio360Viewer';
 import { useModalStore } from '../store/useModalStore';
 import { BeatFilterBar, BeatFilterState } from '../components/catalog/BeatFilterBar';
 import { INDUSTRY_BPM_OPTIONS } from '../data/beatTaxonomy';
@@ -78,6 +80,17 @@ export function HomePage({
       onNavigate('/licensing');
     } else {
       navigate('/licensing');
+    }
+  };
+
+  const handleExplore360 = () => {
+    const el = document.getElementById('studio-360');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (onNavigate) {
+      onNavigate('/about#virtual-tour');
+    } else {
+      navigate('/about#virtual-tour');
     }
   };
 
@@ -299,7 +312,7 @@ export function HomePage({
             <button
               type="button"
               onClick={handleExploreBeats}
-              className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-xl bg-electric-blue hover:bg-electric-blue/90 text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-glow-blue transition-all active:scale-95 group cursor-pointer border-0"
+              className="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl bg-electric-blue hover:bg-electric-blue/90 text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-glow-blue transition-all active:scale-95 group cursor-pointer border-0"
             >
               <span>EXPLORE BEATS</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -308,9 +321,18 @@ export function HomePage({
             <button
               type="button"
               onClick={handleViewLicenses}
-              className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-xl bg-surface-light hover:bg-surface-lighter text-white font-bold text-xs sm:text-sm uppercase tracking-wider border border-surface-border transition-all hover:border-surface-border/80 flex items-center justify-center cursor-pointer"
+              className="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl bg-surface-light hover:bg-surface-lighter text-white font-bold text-xs sm:text-sm uppercase tracking-wider border border-surface-border transition-all hover:border-surface-border/80 flex items-center justify-center cursor-pointer"
             >
               VIEW LICENSES
+            </button>
+
+            <button
+              type="button"
+              onClick={handleExplore360}
+              className="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-purple-600/30 via-indigo-600/30 to-cyan-500/30 hover:from-purple-600/50 hover:to-cyan-500/50 text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider border border-cyan-400/40 hover:border-cyan-400 transition-all shadow-[0_0_20px_rgba(0,240,255,0.2)] flex items-center justify-center gap-2 cursor-pointer group active:scale-95"
+            >
+              <Compass className="w-4 h-4 text-cyan-300 group-hover:rotate-45 transition-transform" />
+              <span>EXPLORE 360°</span>
             </button>
           </div>
         </div>
@@ -328,6 +350,55 @@ export function HomePage({
             beats={featuredBeats.length > 0 ? featuredBeats : safeBeats}
             onOpenLicenseModal={handleOpenLicenseModal}
           />
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 2.5. FRONT PAGE "EXPLORE 360" QUICK ACCESS CARD & VIRTUAL TOUR */}
+      {/* ========================================================================= */}
+      <section
+        id="studio-360"
+        className="relative py-10 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-20"
+      >
+        <div className="p-5 sm:p-8 md:p-10 rounded-3xl bg-gradient-to-b from-[#0d0e1e]/95 to-[#06060f]/95 border border-cyan-500/30 shadow-[0_0_50px_rgba(0,102,255,0.18)] backdrop-blur-xl relative overflow-hidden">
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider mb-2">
+                <Compass className="w-3.5 h-3.5 animate-spin-slow" />
+                <span>360° Virtual Studio Experience</span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                Step Inside the 808 Studio
+              </h2>
+              <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
+                Experience the acoustics, hardware monitors, and vocal rack in full 360° interactive view. Tap and drag anywhere to explore where every master beat is created.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0">
+              <Link
+                to="/about#virtual-tour"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-white uppercase tracking-wider transition-all"
+              >
+                <span>About 808 Tantrik</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Interactive 360 Panorama Viewer */}
+          <div className="rounded-2xl overflow-hidden border border-white/15 shadow-2xl">
+            <Studio360Viewer
+              imageSrc="/studio-front-360.jpg"
+              title="808 Beat Store Flagship Studio"
+              subtitle="Drag & rotate with mouse or touch to explore in full 360°"
+              autoRotate={true}
+            />
+          </div>
         </div>
       </section>
 

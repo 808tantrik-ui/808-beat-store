@@ -13,6 +13,11 @@ interface ModalState {
   authModalReason: AuthModalReason | null;
   openAuthModal: (reason?: AuthModalReason) => void;
   closeAuthModal: () => void;
+
+  // Full-Screen Beat Player Modal State
+  isFullScreenPlayerOpen: boolean;
+  openFullScreenPlayer: () => void;
+  closeFullScreenPlayer: () => void;
 }
 
 export const useModalStore = create<ModalState>((set) => ({
@@ -26,4 +31,8 @@ export const useModalStore = create<ModalState>((set) => ({
     set({ isAuthModalOpen: true, authModalReason: reason }),
   closeAuthModal: () =>
     set({ isAuthModalOpen: false, authModalReason: null }),
+
+  isFullScreenPlayerOpen: false,
+  openFullScreenPlayer: () => set({ isFullScreenPlayerOpen: true }),
+  closeFullScreenPlayer: () => set({ isFullScreenPlayerOpen: false }),
 }));
