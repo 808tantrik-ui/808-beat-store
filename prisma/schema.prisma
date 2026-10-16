@@ -91,7 +91,7 @@ model License {
   musicVideoLimit        Int?             // e.g. 1 commercial video
   radioBroadcasting      Boolean          @default(false)
   forProfitPerformances  Boolean          @default(false)
-  creditRequirement      String           @default("Must credit: (Prod. by [PRODUCER_NAME])")
+  creditRequirement      String           @default("Must credit: (Prod by 808 Beat Store)")
   active                 Boolean          @default(true)
   createdAt              DateTime         @default(now())
   updatedAt              DateTime         @updatedAt

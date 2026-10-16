@@ -154,17 +154,23 @@
     <div class="order-box">
       <div class="order-row">
         <span>Order ID:</span>
-        <span class="order-val"><code>order_Tn8AGnB4KV2vO9</code></span>
+        <span class="order-val"><code id="order-id-label">Dynamic Order</code></span>
       </div>
       <div class="order-row" style="margin-bottom: 0;">
         <span>Amount:</span>
-        <span class="amount-val">₹1,999 (Test)</span>
+        <span class="amount-val" id="amount-label">₹49 (Standard)</span>
       </div>
     </div>
 
     <button id="pay-button" onclick="startRazorpayPayment()">
-      💳 PAY WITH TEST CARD
+      💳 COMPLETE INSTANT CHECKOUT
     </button>
+
+    <div style="margin-top: 14px;">
+      <a href="/beats" style="color: #67e8f9; font-size: 12px; text-decoration: none; font-weight: 600;">
+        ← Return to Official Beat Store Catalog
+      </a>
+    </div>
 
     <div id="status-msg"></div>
 
@@ -177,22 +183,30 @@
   </div>
 
   <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeOrderId = urlParams.get('order_id') || urlParams.get('orderId') || 'order_Tn8AGnB4KV2vO9';
+    const activeAmount = parseInt(urlParams.get('amount') || '4900', 10);
+    const activeKey = urlParams.get('key') || 'rzp_live_Tn9FcsLbIqMLso';
+
+    document.getElementById('order-id-label').innerText = activeOrderId;
+    document.getElementById('amount-label').innerText = '₹' + (activeAmount / 100).toLocaleString();
+
     function startRazorpayPayment() {
       var btn = document.getElementById('pay-button');
-      btn.innerText = 'Opening Modal...';
+      btn.innerText = 'Opening Gateway...';
       btn.disabled = true;
 
       var options = {
-        key: 'rzp_test_Tn81seEgSBq1x6',
-        amount: 199900,
+        key: activeKey,
+        amount: activeAmount,
         currency: 'INR',
         name: '808 Beat Store',
-        description: 'Test Verification Order',
-        order_id: 'order_Tn8AGnB4KV2vO9',
+        description: 'Commercial Beat License Clearance',
+        order_id: activeOrderId,
         prefill: {
-          name: '808 Beat Store Owner',
-          email: 'test@razorpay.com',
-          contact: '9999999999'
+          name: urlParams.get('name') || 'Artist',
+          email: urlParams.get('email') || '',
+          contact: urlParams.get('contact') || ''
         },
         theme: {
           color: '#0066FF'
@@ -201,15 +215,14 @@
           console.log('Payment success:', response);
           var status = document.getElementById('status-msg');
           status.className = 'success';
-          status.innerHTML = '🎉 <b>TEST TRANSACTION SUCCESSFUL!</b><br>Payment ID: <code>' + response.razorpay_payment_id + '</code><br>Order ID: <code>' + response.razorpay_order_id + '</code><br><br>👉 <b>Ab Razorpay Dashboard wale tab par jayein aur "I have done the transaction" par click karein!</b>';
+          status.innerHTML = '🎉 <b>TRANSACTION SUCCESSFUL!</b><br>Payment ID: <code>' + response.razorpay_payment_id + '</code><br>Order ID: <code>' + response.razorpay_order_id + '</code><br><br><a href="/beats" style="color:#10b981;font-weight:bold;">Return to Store</a>';
           btn.innerText = '✓ Payment Successful';
           btn.style.background = '#10b981';
           btn.disabled = false;
-          alert('Payment Successful! Payment ID: ' + response.razorpay_payment_id + '\n\nAb Razorpay Dashboard par "I have done the transaction" par click karein!');
         },
         modal: {
           ondismiss: function() {
-            btn.innerText = '💳 PAY WITH TEST CARD';
+            btn.innerText = '💳 COMPLETE INSTANT CHECKOUT';
             btn.disabled = false;
           }
         }

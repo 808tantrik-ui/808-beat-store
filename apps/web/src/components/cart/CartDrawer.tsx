@@ -4,6 +4,7 @@ import { X, Trash2, ArrowRight, ShoppingBag, ShieldCheck } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useModalStore } from '../../store/useModalStore';
+import { FALLBACK_LICENSES } from '../../data/fallbackData';
 
 interface CartDrawerProps {
   onNavigateCheckout?: () => void;
@@ -113,20 +114,27 @@ export function CartDrawer({ onNavigateCheckout, onNavigateCart }: CartDrawerPro
 
                     <div className="mt-2">
                       {/* License Selector dropdown */}
-                      <select
-                        value={item.license?.id || (item as any).selectedLicense?.id}
-                        onChange={(e) => {
-                          const lic = item.beat.availableLicenses?.find((l) => l.id === e.target.value);
-                          if (lic) updateLicense(item.beat.id, lic);
-                        }}
-                        className="w-full text-xs bg-surface-lighter border border-surface-border rounded-lg px-2.5 py-1.5 text-white font-medium focus:outline-none focus:border-electric-blue transition-colors cursor-pointer"
-                      >
-                        {item.beat.availableLicenses?.map((lic) => (
-                          <option key={lic.id} value={lic.id}>
-                            {lic.displayName} - ₹{lic.price.toLocaleString()}
-                          </option>
-                        ))}
-                      </select>
+                      {(() => {
+                        const beatLicenses = (item.beat.availableLicenses && item.beat.availableLicenses.length > 0)
+                          ? item.beat.availableLicenses
+                          : FALLBACK_LICENSES;
+                        return (
+                          <select
+                            value={item.license?.id || (item as any).selectedLicense?.id}
+                            onChange={(e) => {
+                              const lic = beatLicenses.find((l) => l.id === e.target.value);
+                              if (lic) updateLicense(item.beat.id, lic);
+                            }}
+                            className="w-full text-xs bg-surface-lighter border border-surface-border rounded-lg px-2.5 py-1.5 text-white font-medium focus:outline-none focus:border-electric-blue transition-colors cursor-pointer"
+                          >
+                            {beatLicenses.map((lic) => (
+                              <option key={lic.id} value={lic.id}>
+                                {lic.displayName} - ₹{lic.price.toLocaleString()}
+                              </option>
+                            ))}
+                          </select>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>

@@ -4,6 +4,7 @@ import { ShoppingBag, Trash2, ArrowRight, ShieldCheck, ArrowLeft } from 'lucide-
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useModalStore } from '../store/useModalStore';
+import { FALLBACK_LICENSES } from '../data/fallbackData';
 
 interface CartPageProps {
   onNavigate?: (route: string) => void;
@@ -101,20 +102,27 @@ export function CartPage({ onNavigate }: CartPageProps) {
 
                   {/* License Dropdown */}
                   <div className="mt-2">
-                    <select
-                      value={item.license?.id || (item as any).selectedLicense?.id}
-                      onChange={(e) => {
-                        const newLic = item.beat.availableLicenses?.find((l) => l.id === e.target.value);
-                        if (newLic) updateLicense(item.beat.id, newLic);
-                      }}
-                      className="text-xs bg-surface-lighter border border-surface-border rounded-lg px-2.5 py-1.5 text-white font-medium focus:outline-none focus:border-electric-blue transition-colors cursor-pointer"
-                    >
-                      {item.beat.availableLicenses?.map((lic) => (
-                        <option key={lic.id} value={lic.id}>
-                          {lic.displayName}
-                        </option>
-                      ))}
-                    </select>
+                    {(() => {
+                      const beatLicenses = (item.beat.availableLicenses && item.beat.availableLicenses.length > 0)
+                        ? item.beat.availableLicenses
+                        : FALLBACK_LICENSES;
+                      return (
+                        <select
+                          value={item.license?.id || (item as any).selectedLicense?.id}
+                          onChange={(e) => {
+                            const newLic = beatLicenses.find((l) => l.id === e.target.value);
+                            if (newLic) updateLicense(item.beat.id, newLic);
+                          }}
+                          className="text-xs bg-surface-lighter border border-surface-border rounded-lg px-2.5 py-1.5 text-white font-medium focus:outline-none focus:border-electric-blue transition-colors cursor-pointer"
+                        >
+                          {beatLicenses.map((lic) => (
+                            <option key={lic.id} value={lic.id}>
+                              {lic.displayName} - ₹{lic.price.toLocaleString()}
+                            </option>
+                          ))}
+                        </select>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>

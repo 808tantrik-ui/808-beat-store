@@ -187,10 +187,11 @@ client.on('qr', async (qr) => {
       </div>
     </body>
     </html>`;
-    fs.writeFileSync(QR_HTML_PATH, htmlContent, 'utf-8');
-    try {
-      spawn('cmd', ['/c', 'start', '', QR_HTML_PATH], { detached: true, stdio: 'ignore' });
-    } catch (e) { }
+    if (process.platform === 'win32' && !process.env.RENDER && !process.env.CI && !process.env.HEADLESS) {
+      try {
+        spawn('cmd', ['/c', 'start', '', QR_HTML_PATH], { detached: true, stdio: 'ignore' });
+      } catch (e) { }
+    }
   } catch (err) {
     console.error('Error generating QR image:', err);
   }

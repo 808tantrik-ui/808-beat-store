@@ -42,7 +42,7 @@ export function LicenseModal({ beat, onClose, onNavigateCheckout }: LicenseModal
       musicVideoLimit: 2,
       radioBroadcasting: true,
       forProfitPerformances: true,
-      creditRequirement: 'Prod. by [PRODUCER_NAME]',
+      creditRequirement: `Prod by ${brandHelpers.getProducerName(producerBrand)}`,
       isExclusive: false,
     },
     {
@@ -59,7 +59,7 @@ export function LicenseModal({ beat, onClose, onNavigateCheckout }: LicenseModal
       musicVideoLimit: null,
       radioBroadcasting: true,
       forProfitPerformances: true,
-      creditRequirement: 'Prod. by [PRODUCER_NAME]',
+      creditRequirement: `Prod by ${brandHelpers.getProducerName(producerBrand)}`,
       isExclusive: true,
     },
   ];

@@ -3,92 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>808 Beat Store - Razorpay Test Payment</title>
+  <title>808 Beat Store | Secure Checkout & Payment</title>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     * { box-sizing: border-box; }
     body {
-      background-color: #07070b;
+      background-color: #06060c;
+      background-image: radial-gradient(circle at 50% 20%, rgba(0, 102, 255, 0.12), transparent 60%);
       color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0;
-      padding: 20px;
+      padding: 16px;
     }
     .card {
-      background: #11111a;
-      border: 1px solid #252538;
-      border-radius: 18px;
-      padding: 36px;
-      max-width: 480px;
+      background: #0d0e1a;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 32px 28px;
+      max-width: 460px;
       width: 100%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 102, 255, 0.15);
       text-align: center;
+      position: relative;
     }
     .badge {
-      display: inline-block;
-      background: rgba(0, 102, 255, 0.15);
-      color: #3b82f6;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      padding: 4px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      padding: 5px 14px;
       border-radius: 50px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
     h1 {
-      font-size: 26px;
-      margin: 0 0 10px 0;
-      font-weight: 800;
+      font-size: 24px;
+      margin: 0 0 8px 0;
+      font-weight: 900;
       letter-spacing: -0.5px;
+      background: linear-gradient(to right, #ffffff, #67e8f9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     p {
       color: #94a3b8;
-      font-size: 14px;
-      margin: 0 0 24px 0;
+      font-size: 13px;
+      margin: 0 0 22px 0;
       line-height: 1.5;
     }
-    .amount-box {
-      background: #181826;
-      border: 1px solid #2e2e46;
-      border-radius: 12px;
+    .order-box {
+      background: #141525;
+      border: 1px solid #282942;
+      border-radius: 14px;
       padding: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
+      text-align: left;
+    }
+    .order-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-    .amount-label {
+      margin-bottom: 8px;
+      font-size: 13px;
       color: #94a3b8;
-      font-size: 14px;
+    }
+    .order-val {
+      color: #38bdf8;
+      font-weight: 700;
+      font-family: monospace;
     }
     .amount-val {
       color: #10b981;
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 900;
+      font-family: monospace;
     }
     button {
-      background: #0066FF;
+      background: linear-gradient(135deg, #0066FF, #00d4ff);
       color: #ffffff;
       border: none;
       width: 100%;
-      padding: 18px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 800;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 8px 24px rgba(0, 102, 255, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 102, 255, 0.4);
     }
     button:hover {
-      background: #0052cc;
+      filter: brightness(1.1);
       transform: translateY(-1px);
-      box-shadow: 0 12px 28px rgba(0, 102, 255, 0.45);
+    }
+    button:active {
+      transform: scale(0.98);
     }
     .info-box {
       margin-top: 24px;
@@ -100,9 +119,6 @@
       font-size: 13px;
       color: #cbd5e1;
       line-height: 1.6;
-    }
-    .info-box b {
-      color: #ffffff;
     }
     .info-box code {
       background: #252538;
@@ -131,66 +147,82 @@
 <body>
 
   <div class="card">
-    <div class="badge">Razorpay Onboarding</div>
+    <div class="badge">Verified Order Attached</div>
     <h1>808 Beat Store</h1>
-    <p>Click below to open the Razorpay Checkout Modal and complete your Step 3 test transaction.</p>
+    <p>Official Razorpay order attached. Click below to pay.</p>
 
-    <div class="amount-box">
-      <span class="amount-label">Test Amount:</span>
-      <span class="amount-val">₹100 (Test)</span>
+    <div class="order-box">
+      <div class="order-row">
+        <span>Order ID:</span>
+        <span class="order-val"><code id="order-id-label">Dynamic Order</code></span>
+      </div>
+      <div class="order-row" style="margin-bottom: 0;">
+        <span>Amount:</span>
+        <span class="amount-val" id="amount-label">₹49 (Standard)</span>
+      </div>
     </div>
 
     <button id="pay-button" onclick="startRazorpayPayment()">
-      💳 OPEN RAZORPAY TEST MODAL
+      💳 COMPLETE INSTANT CHECKOUT
     </button>
+
+    <div style="margin-top: 14px;">
+      <a href="/beats" style="color: #67e8f9; font-size: 12px; text-decoration: none; font-weight: 600;">
+        ← Return to Official Beat Store Catalog
+      </a>
+    </div>
 
     <div id="status-msg"></div>
 
     <div class="info-box">
-      <b>Test Credentials to enter in modal:</b><br>
+      <b>Test Credentials:</b><br>
       • <b>Card:</b> <code>4100 2800 0000 1007</code><br>
       • <b>Expiry:</b> <code>12/26</code> &nbsp;|&nbsp; <b>CVV:</b> <code>123</code><br>
-      • <b>Test UPI:</b> <code>test@razorpay</code><br>
-      <i>(No real money will be charged — purely test mode)</i>
+      • <i>OTP screen aane par <b>Success</b> button dabayein!</i>
     </div>
   </div>
 
   <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeOrderId = urlParams.get('order_id') || urlParams.get('orderId') || 'order_Tn8AGnB4KV2vO9';
+    const activeAmount = parseInt(urlParams.get('amount') || '4900', 10);
+    const activeKey = urlParams.get('key') || 'rzp_live_Tn9FcsLbIqMLso';
+
+    document.getElementById('order-id-label').innerText = activeOrderId;
+    document.getElementById('amount-label').innerText = '₹' + (activeAmount / 100).toLocaleString();
+
     function startRazorpayPayment() {
       var btn = document.getElementById('pay-button');
-      btn.innerText = 'Opening Razorpay Modal...';
+      btn.innerText = 'Opening Gateway...';
       btn.disabled = true;
 
       var options = {
-        key: 'rzp_test_Tn81seEgSBq1x6',
-        amount: 10000, // 100 INR in paise
+        key: activeKey,
+        amount: activeAmount,
         currency: 'INR',
         name: '808 Beat Store',
-        description: 'Test Verification Transaction',
-        image: 'https://cdn.razorpay.com/static/assets/logo/payment.svg',
+        description: 'Commercial Beat License Clearance',
+        order_id: activeOrderId,
         prefill: {
-          name: '808 Beat Store Producer',
-          email: 'test@razorpay.com',
-          contact: '9999999999'
-        },
-        notes: {
-          purpose: 'Razorpay Dashboard Step 3 Activation'
+          name: urlParams.get('name') || 'Artist',
+          email: urlParams.get('email') || '',
+          contact: urlParams.get('contact') || ''
         },
         theme: {
           color: '#0066FF'
         },
         handler: function(response) {
-          console.log('Payment successful:', response);
+          console.log('Payment success:', response);
           var status = document.getElementById('status-msg');
           status.className = 'success';
-          status.innerHTML = '🎉 <b>TEST TRANSACTION COMPLETED!</b><br>Payment ID: <code>' + response.razorpay_payment_id + '</code><br><br>👉 <b>Ab Razorpay Dashboard wale tab par jayein aur "I have done the transaction" par click karein!</b>';
-          btn.innerText = '✓ Transaction Completed';
+          status.innerHTML = '🎉 <b>TRANSACTION SUCCESSFUL!</b><br>Payment ID: <code>' + response.razorpay_payment_id + '</code><br>Order ID: <code>' + response.razorpay_order_id + '</code><br><br><a href="/beats" style="color:#10b981;font-weight:bold;">Return to Store</a>';
+          btn.innerText = '✓ Payment Successful';
           btn.style.background = '#10b981';
           btn.disabled = false;
         },
         modal: {
           ondismiss: function() {
-            btn.innerText = '💳 OPEN RAZORPAY TEST MODAL';
+            btn.innerText = '💳 COMPLETE INSTANT CHECKOUT';
             btn.disabled = false;
           }
         }
@@ -199,14 +231,14 @@
       try {
         var rzp = new Razorpay(options);
         rzp.on('payment.failed', function(resp) {
-          alert('Payment Failed: ' + (resp.error ? resp.error.description : 'Unknown'));
-          btn.innerText = '💳 OPEN RAZORPAY TEST MODAL';
+          alert('Payment Failed: ' + (resp.error ? resp.error.description : 'Unknown error'));
+          btn.innerText = '💳 PAY WITH TEST CARD';
           btn.disabled = false;
         });
         rzp.open();
       } catch (err) {
         alert('Could not open Razorpay modal: ' + err.message);
-        btn.innerText = '💳 OPEN RAZORPAY TEST MODAL';
+        btn.innerText = '💳 PAY WITH TEST CARD';
         btn.disabled = false;
       }
     }

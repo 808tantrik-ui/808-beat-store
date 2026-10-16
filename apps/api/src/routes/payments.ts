@@ -90,7 +90,7 @@ paymentsRouter.post('/checkout', async (req: Request, res: Response) => {
               slug: finalSlug,
               description: catalogMatch.youtubeDescription || `Studio master ${catalogMatch.genre} beat.`,
               artwork: `/assets/artwork/${finalSlug}.jpg`,
-              previewAudio: `/assets/audio/${finalSlug}.wav`,
+              previewAudio: `/assets/audio/${finalSlug}.mp3`,
               privateMp3: `/assets/audio/${finalSlug}.mp3`,
               privateWav: `/assets/audio/${finalSlug}.wav`,
               bpm: catalogMatch.bpm || 100,

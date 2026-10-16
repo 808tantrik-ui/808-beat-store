@@ -71,7 +71,7 @@ export async function seed20Beats() {
       slug: slug,
       description: b.youtubeDescription || `Studio master ${b.genre} beat produced by 808 Beat Store.`,
       artwork: `/assets/artwork/${slug}.jpg`,
-      previewAudio: `/assets/audio/${slug}.wav`,
+      previewAudio: `/assets/audio/${slug}.mp3`,
       privateMp3: `/assets/audio/${slug}.mp3`,
       privateWav: `/assets/audio/${slug}.wav`,
       bpm: b.bpm || 100,

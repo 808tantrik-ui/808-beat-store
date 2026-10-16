@@ -1,7 +1,9 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 
-const gitPath = 'C:\\Users\\808ta\\AppData\\Local\\Programs\\PortableGit\\cmd\\git.exe';
+const gitPath = fs.existsSync('C:\\Users\\808ta\\AppData\\Local\\Programs\\PortableGit\\cmd\\git.exe')
+  ? 'C:\\Users\\808ta\\AppData\\Local\\Programs\\PortableGit\\cmd\\git.exe'
+  : 'git';
 
 console.log('🚀 Starting deployment to GitHub and Render...');
 
@@ -12,7 +14,7 @@ try {
 
   // 2. Commit changes
   console.log('📝 Creating commit...');
-  execSync(`"${gitPath}" commit -m "feat: galaxy infinity loader, explore 360 quick access, full-screen player fix, checkout polish, 808 tantrik bio, social deep-linking"`, { stdio: 'inherit' });
+  execSync(`"${gitPath}" commit -m "fix: audio preview streaming, missing mp3s, cart dropdown safety, dynamic pricing & zero placeholders"`, { stdio: 'inherit' });
 
   // 3. Push to origin main
   console.log('⬆️ Pushing to GitHub (origin main)...');

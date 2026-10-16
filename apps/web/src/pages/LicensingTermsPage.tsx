@@ -65,7 +65,7 @@ export function LicensingTermsPage({ onNavigate }: LicensingTermsPageProps) {
             </div>
 
             <span className="px-3 py-1 rounded-full bg-electric-blue/20 text-blue-300 text-xs font-mono font-bold">
-              Standard License (₹500)
+              Standard License (₹{brandHelpers.getNonExclusivePrice(producerBrand)})
             </span>
           </div>
 
@@ -126,7 +126,7 @@ export function LicensingTermsPage({ onNavigate }: LicensingTermsPageProps) {
             </div>
 
             <span className="px-3 py-1 rounded-full bg-electric-blue/20 text-electric-blue text-xs font-mono font-bold">
-              Exclusive License (₹5,000)
+              Exclusive License (₹{brandHelpers.getExclusivePrice(producerBrand).toLocaleString()})
             </span>
           </div>
 

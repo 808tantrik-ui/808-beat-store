@@ -65,7 +65,11 @@ const corsMiddleware = cors({
 app.use(corsMiddleware);
 app.options('*', corsMiddleware);
 
-// Serve public static assets (artwork, previews)
+// Serve static assets: check compiled dist/web/assets first, then public/assets
+const distAssets = path.resolve(process.cwd(), 'dist/web/assets');
+if (fs.existsSync(distAssets)) {
+  app.use('/assets', express.static(distAssets));
+}
 app.use('/assets', express.static(path.resolve(process.cwd(), 'public/assets')));
 
 // Capture raw body for webhook verification

@@ -58,7 +58,7 @@ async function main() {
       musicVideoLimit: 2,
       radioBroadcasting: true,
       forProfitPerformances: true,
-      creditRequirement: 'Must credit in title/description: (Prod. by [PRODUCER_NAME])',
+      creditRequirement: 'Must credit in title/description: (Prod by 808 Beat Store)',
       active: true,
       features: {
         create: [
@@ -86,7 +86,7 @@ async function main() {
       musicVideoLimit: null,
       radioBroadcasting: true,
       forProfitPerformances: true,
-      creditRequirement: 'Prod. by [PRODUCER_NAME]',
+      creditRequirement: 'Prod by 808 Beat Store',
       active: true,
       features: {
         create: [

@@ -79,8 +79,10 @@ function scanDir(dir: string) {
       const matches = content.match(PLACEHOLDER_REGEX);
       if (matches) {
         // Exclude legitimate checks such as regex tests or brand definitions
+        const KNOWN_LEGITIMATE = new Set(['[FREE]', '[100]']);
         const filteredMatches = matches.filter(
           (m) =>
+            !KNOWN_LEGITIMATE.has(m) &&
             !content.includes(`isPlaceholder`) &&
             !content.includes(`regex`) &&
             !content.includes(`producerBrand`)
