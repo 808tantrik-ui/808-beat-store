@@ -11,3 +11,5 @@ my data/
 mydata/
 "hero videos/"
 temp_analysis.pcm
+scripts/.yt_token.json
+*.token.json
