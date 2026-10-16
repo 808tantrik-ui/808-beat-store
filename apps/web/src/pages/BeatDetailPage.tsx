@@ -48,8 +48,10 @@ export function BeatDetailPage({ slug: propSlug, onNavigate, onOpenLicenseModal 
 
   const currentTrack = useAudioStore((s) => s.currentTrack);
   const isPlaying = useAudioStore((s) => s.isPlaying);
+  const currentTime = useAudioStore((s) => s.currentTime);
   const playTrack = useAudioStore((s) => s.playTrack);
   const pauseTrack = useAudioStore((s) => s.pauseTrack);
+  const seek = useAudioStore((s) => s.seek);
   const { addItem } = useCartStore();
 
   const producerName = brandHelpers.getProducerName(producerBrand);
@@ -198,6 +200,10 @@ export function BeatDetailPage({ slug: propSlug, onNavigate, onOpenLicenseModal 
   });
 
   const activeLicense = normalizedLicenses.find((l) => l.id === selectedLicenseId) || normalizedLicenses[0];
+
+  const isCurrentPlaying = Boolean(
+    isPlaying && currentTrack && beat && (currentTrack.id === beat.id || currentTrack.slug === beat.slug)
+  );
 
   const handlePlayToggle = () => {
     if (isCurrentPlaying) {
@@ -494,7 +500,7 @@ export function BeatDetailPage({ slug: propSlug, onNavigate, onOpenLicenseModal 
                 <div className="flex items-center justify-between text-[11px] text-text-subtle font-mono mt-1">
                   <span>{rb.bpm} BPM</span>
                   <span className="text-white font-semibold">
-                    ₹{rb.availableLicenses?.[0]?.price?.toLocaleString() || '1,999'}
+                    ₹{rb.availableLicenses?.[0]?.price?.toLocaleString() || brandHelpers.getNonExclusivePrice(producerBrand)}
                   </span>
                 </div>
               </Link>
